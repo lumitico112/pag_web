@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTPTRAVEL | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/user-sidebar.css">
+    <link rel="icon" type="image/x-icon" href="../img/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Sidebar de usuario -->
+    <div id="userSidebarContainer"></div>
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark ">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">UTPTRAVEL</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuServicios"
+              aria-controls="menuServicios" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menuServicios">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="index.html">Inicio</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="servicios.html">Rutas y Servicios</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="comprar.html">Comprar Pasajes</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="nosotros.html">Nosotros</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="contacto.html">Contacto</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="login.html">Iniciar Sesión</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+    <main class="container">
+        <section>
+            <h2>Iniciar Sesión</h2>
+            <form id="loginForm" class="form">
+                <div class="input-box">
+                    <label for="loginEmail">Correo Electrónico</label>
+                    <input type="email" id="loginEmail" required>
+                    <div id="emailLoginError" class="error-message" style="color: red; font-size: 0.9em;"></div>
+                </div>
+
+                <div class="input-box">
+                    <label for="loginPassword">Contraseña</label>
+                    <input type="password" id="loginPassword" required>
+                    <div id="passwordLoginError" class="error-message" style="color: red; font-size: 0.9em;"></div>
+                </div>
+
+                <button type="submit">Ingresar</button>
+                <p class="register-link">¿No tienes cuenta? <a href="signup.html">Regístrate aquí</a></p>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <section class="info-contacto">
+            <div>
+                <h3>Contacto</h3>
+                <p><i class="fas fa-phone"></i> +51 919 543 387</p>
+                <p><i class="fas fa-envelope"></i> viajesseguro@utptravel.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Av. Central 123, Lima, Perú</p>
+            </div>
+        </section>
+        <section class="redes">
+            <div>
+                <h3>Síguenos</h3>
+                <div><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></div>
+                <div><a href="#"><i class="fab fa-instagram"></i> Instagram</a></div>
+                <div><a href="#"><i class="fab fa-x-twitter"></i> Twitter</a></div>
+                <div><a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a></div>
+            </div>
+        </section>
+    </footer>
+    <script>
+      // Definir la URL base de la API para todos los JS
+      var API_BASE_URL = 'http://localhost:8000/backend_php/api';
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/login.js"></script>
+    <script src="../js/user-sidebar.js"></script>
+    <script src="../js/user-sidebar-loader.js"></script>
+</body>
+
+</html>

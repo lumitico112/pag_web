@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UTPTRAVEL | Transporte Interprovincial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/servicios.css" />
+  <link rel="stylesheet" href="../css/user-sidebar.css">
+  <link rel="icon" type="image/x-icon" href="../img/logo.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+</head>
+<body>
+  <!-- Sidebar de usuario -->
+  <div id="userSidebarContainer"></div>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">UTPTRAVEL</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuServicios" aria-controls="menuServicios" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menuServicios">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="servicios.html">Rutas y Servicios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="comprar.html">Comprar Pasajes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="nosotros.html">Nosotros</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contacto.html">Contacto</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="login.html">Iniciar Sesión</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <section class="services-section text-center mb-5">
+          <h1 class="display-4 section-title">
+            <span class="material-symbols-outlined">directions_bus</span>
+            Nuestros Servicios
+          </h1>
+          <p class="lead">Descubre todos los servicios que UTPTRAVEL tiene para ti</p>
+        </section>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="services-container">
+          <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+              <div class="service-card card h-100 p-4 text-center">
+                <div class="service-icon mb-3">
+                  <span class="material-symbols-outlined display-1 text-primary">route</span>
+                </div>
+                <h3>Rutas Regulares</h3>
+                <ul class="list-unstyled">
+                  <li><i class="fas fa-check text-success"></i> Salidas diarias programadas</li>
+                  <li><i class="fas fa-check text-success"></i> Conexiones entre ciudades</li>
+                  <li><i class="fas fa-check text-success"></i> Paradas estratégicas</li>
+                </ul>
+                <a href="#" class="btn btn-primary mt-auto">Ver horarios</a>
+              </div>
+            </div>
+    
+            <div class="col-lg-4 col-md-6">
+              <div class="service-card card h-100 p-4 text-center featured border-warning">
+                <div class="service-icon mb-3">
+                  <span class="material-symbols-outlined display-1 text-warning">star</span>
+                </div>
+                <h3>Servicio Ejecutivo</h3>
+                <ul class="list-unstyled">
+                  <li><i class="fas fa-check text-success"></i> Asientos premium reclinables</li>
+                  <li><i class="fas fa-check text-success"></i> Wi-Fi a bordo</li>
+                  <li><i class="fas fa-check text-success"></i> Entretenimiento individual</li>
+                </ul>
+                <a href="#" class="btn btn-warning mt-auto">Más información</a>
+              </div>
+            </div>
+    
+            <div class="col-lg-4 col-md-6">
+              <div class="service-card card h-100 p-4 text-center">
+                <div class="service-icon mb-3">
+                  <span class="material-symbols-outlined display-1 text-info">groups</span>
+                </div>
+                <h3>Transporte Grupal</h3>
+                <ul class="list-unstyled">
+                  <li><i class="fas fa-check text-success"></i> Servicio para equipos</li>
+                  <li><i class="fas fa-check text-success"></i> Vehículos exclusivos</li>
+                  <li><i class="fas fa-check text-success"></i> Rutas personalizadas</li>
+                </ul>
+                <a href="#" class="btn btn-info mt-auto">Cotizar ahora</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <section class="info-contacto">
+      <div>
+        <h3>Contacto</h3>
+        <p><i class="fas fa-phone"></i> +51 919 543 387</p>
+        <p><i class="fas fa-envelope"></i> viajesseguro@utptravel.com</p>
+        <p><i class="fas fa-map-marker-alt"></i> Av. Central 123, Lima, Perú</p>
+      </div>
+    </section>
+    <section class="redes">
+      <div>
+        <h3>Síguenos</h3>
+        <div><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></div>
+        <div><a href="#"><i class="fab fa-instagram"></i> Instagram</a></div>
+        <div><a href="#"><i class="fab fa-x-twitter"></i> Twitter</a></div>
+        <div><a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a></div>
+      </div>
+    </section>
+  </footer>
+  <script>
+    // Definir la URL base de la API para todos los JS
+    var API_BASE_URL = 'http://localhost:8000/backend_php/api';
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/user-sidebar-loader.js"></script>
+  <script src="../js/user-sidebar.js"></script>
+  <script src="../js/navbar.js"></script>
+</body>
+</html>

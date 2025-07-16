@@ -1,0 +1,97 @@
+/* Estilos específicos para formulario de reserva */
+.paso-reserva {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ruta-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.ruta-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.ruta-card.border-primary {
+  border-width: 2px !important;
+  box-shadow: 0 0 15px rgba(0,123,255,0.3);
+}
+
+/* Fieldset para pasajeros */
+fieldset {
+  border: 1px solid #dee2e6 !important;
+  border-radius: 8px;
+}
+
+fieldset legend {
+  padding: 0 10px;
+  width: auto;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Botones de navegación */
+.btn-group .btn {
+  min-width: 120px;
+}
+
+/* Alertas de confirmación */
+.alert-success {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  border: 1px solid #b8d7c3;
+  color: #155724;
+}
+
+/* Precio total destacado */
+#precio-total {
+  font-size: 1.1rem;
+  border-left: 4px solid #28a745;
+}
+
+/* Responsive para formulario de reserva */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+  
+  .card {
+    margin: 10px 0;
+  }
+  
+  .ruta-card img {
+    height: 120px !important;
+  }
+  
+  fieldset {
+    padding: 15px !important;
+  }
+}
+
+/* Indicadores de paso */
+.paso-reserva h5 {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.paso-reserva h5 i {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  background: #007bff;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}

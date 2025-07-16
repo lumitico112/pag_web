@@ -1,0 +1,176 @@
+/* Estilos específicos para la página de comprar */
+
+/* Asegurar que la imagen de fondo se vea */
+body {
+    background: url('../img/fondo1.jpg') no-repeat center center/cover !important;
+    background-attachment: fixed !important;
+    min-height: 100vh;
+}
+
+/* Tarjetas de ruta */
+.route-card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.route-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.route-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.route-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.route-card .card-body {
+    padding: 1.5rem;
+}
+
+.route-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.route-card .card-text {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.route-card .badge {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+.route-card .btn {
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.route-card .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* Sección de bienvenida con imagen travel.jpg */
+.bienvenida {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../img/travel.jpg') no-repeat center center/cover;
+    color: white;
+    padding: 4rem;
+    border-radius: 1rem;
+    animation: fadeIn 1.5s ease;
+}
+
+.bienvenida .text-primary {
+    color: white !important;
+}
+
+.bienvenida .lead {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Sección de rutas */
+.rutas {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(3px);
+}
+
+/* Sección de información */
+#info-dinamica {
+    background: rgba(248, 249, 250, 0.75);
+    backdrop-filter: blur(8px);
+}
+
+/* Animaciones de carga */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Estilos para botones de búsqueda horizontal */
+.search-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-buttons .btn {
+  white-space: nowrap;
+  flex: 1;
+  min-width: 100px;
+}
+
+/* Mejorar responsive para el formulario de búsqueda */
+@media (max-width: 768px) {
+  .search-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .search-buttons .btn {
+    width: 100%;
+  }
+}
+
+/* Mejorar el contenedor de rutas en comprar.html */
+.rutas-scroll-container {
+  margin: 0 auto;
+  max-width: 1400px;
+  padding: 0 60px;
+}
+
+/* Ajustar tamaño de rutas en comprar para mostrar más */
+.rutas-scroll-wrapper .ruta-card {
+  flex: 0 0 calc(25% - 15px);
+  min-width: 300px;
+}
+
+@media (max-width: 1400px) {
+  .rutas-scroll-wrapper .ruta-card {
+    flex: 0 0 calc(33.333% - 14px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .rutas-scroll-wrapper .ruta-card {
+    flex: 0 0 calc(50% - 10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .rutas-scroll-wrapper .ruta-card {
+    flex: 0 0 calc(100% - 20px);
+  }
+  
+  .rutas-scroll-container {
+    padding: 0 40px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .route-card .card-body {
+        padding: 1rem;
+    }
+    
+    .route-card .card-title {
+        font-size: 1rem;
+    }
+    
+    .route-card .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}

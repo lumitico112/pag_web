@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Historial de Compras | UTPTRAVEL</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/historial.css" />
+  <link rel="stylesheet" href="../css/user-sidebar.css">
+  <link rel="icon" type="image/x-icon" href="../img/logo.png">
+</head>
+<body>
+  <!-- Sidebar de usuario -->
+  <div id="userSidebarContainer"></div>
+
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">UTPTRAVEL</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNav"
+          aria-controls="menuNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menuNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="servicios.html">Rutas y Servicios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="comprar.html">Comprar Pasajes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="nosotros.html">Nosotros</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contacto.html">Contacto</a>
+            </li>
+            <!-- Menú de usuario autenticado se cargará aquí -->
+            <li class="nav-item dropdown" id="user-menu" style="display: none;">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                <i class="fas fa-user"></i> <span id="user-name"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="perfil.html"><i class="fas fa-user-edit"></i> Mi Perfil</a></li>
+                <li><a class="dropdown-item" href="historial.html"><i class="fas fa-history"></i> Historial</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+              </ul>
+            </li>
+            <li class="nav-item" id="login-link">
+              <a class="nav-link" href="login.html">Iniciar Sesión</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container-fluid my-5 px-0">
+    <div class="row justify-content-center mx-0">
+      <div class="col-12 px-0">
+        <!-- Título -->
+        <div class="text-center mb-4">
+          <h1 class="display-5 text-primary">
+            <i class="fas fa-history"></i> Historial de Compras
+          </h1>
+          <p class="lead">Revisa todas tus compras de pasajes realizadas</p>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card mb-6 shadow">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+              <i class="fas fa-filter"></i> Filtrar Compras
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row g-3 align-items-end">
+              <div class="col-md-4">
+                <label for="fechaInicio" class="form-label">Desde:</label>
+                <input type="date" id="fechaInicio" class="form-control">
+              </div>
+              <div class="col-md-4">
+                <label for="fechaFin" class="form-label">Hasta:</label>
+                <input type="date" id="fechaFin" class="form-control">
+              </div>
+              <div class="col-md-4">
+                <div class="d-flex gap-2">
+                  <button class="btn btn-primary" onclick="filtrarHistorial()">
+                    <i class="fas fa-search"></i> Filtrar
+                  </button>
+                  <button class="btn btn-outline-secondary" onclick="restablecerFiltros()">
+                    <i class="fas fa-undo"></i> Restablecer
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="d-flex gap-2 justify-content-center">
+                  <button class="btn btn-sm btn-outline-success" onclick="ordenarPorFecha('asc')">
+                    <i class="fas fa-sort-numeric-up"></i> Más antiguo
+                  </button>
+                  <button class="btn btn-sm btn-outline-info" onclick="ordenarPorFecha('desc')">
+                    <i class="fas fa-sort-numeric-down"></i> Más reciente
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Historial -->
+        <div class="card mb-6 shadow w-100" style="max-width: 60vw;">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+              <i class="fas fa-ticket-alt"></i> Tus Compras
+            </h5>
+          </div>
+          <div class="card-body p-0" style="width: 60vw; max-width: 60vw;">
+            <div id="historial" class="historial-scroll" style="width: 60vw; max-width: 60vw; min-height: 320px;">
+              <!-- Aquí se cargarán las compras dinámicamente -->
+              <div class="d-flex align-items-center justify-content-center w-100">
+                <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                <p class="mt-2 ms-2">Cargando historial...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <section class="info-contacto">
+      <div>
+        <h3>Contacto</h3>
+        <p><i class="fas fa-phone"></i> +51 919 543 387</p>
+        <p><i class="fas fa-envelope"></i> viajesseguro@utptravel.com</p>
+        <p><i class="fas fa-map-marker-alt"></i> Av. Central 123, Lima, Perú</p>
+      </div>
+    </section>
+    <section class="redes">
+      <div>
+        <h3>Síguenos</h3>
+        <div><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></div>
+        <div><a href="#"><i class="fab fa-instagram"></i> Instagram</a></div>
+        <div><a href="#"><i class="fab fa-x-twitter"></i> Twitter</a></div>
+        <div><a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a></div>
+      </div>
+    </section>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    var API_BASE_URL = 'http://localhost:8000/backend_php/api';
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/navbar.js"></script>
+  <script src="../js/historial.js"></script>
+  <script src="../js/user-sidebar.js"></script>
+  <script src="../js/user-sidebar-loader.js"></script>
+</body>
+</html>

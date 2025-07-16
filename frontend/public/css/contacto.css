@@ -1,0 +1,306 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-image: url("../img/fondo1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  line-height: 1.6;
+  color: #333;
+  height: 100vh;
+}
+
+
+.navbar {
+  background-color: #010912 ;
+  padding: 15px 20px;
+}
+
+
+.navbar .nav-link {
+  color: white !important;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+
+.navbar .nav-link.active {
+  color: #4CAF50 !important;
+}
+
+
+.navbar .nav-link:hover {
+  color: #ffcc00 ;
+}
+
+
+.navbar-nav {
+  gap: 25px;
+  align-items: center;
+}
+
+
+.navbar-brand {
+  font-weight: bold;
+  color: #fff;
+}
+
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 110px;
+  height: 100vh;
+  background: rgba(0, 64, 128, 0.055);
+  color: white;
+  transition: width 0.3s ease;
+  overflow-x: hidden;
+  z-index: 1000;
+}
+
+.sidebar:hover {
+  width: 250px;
+}
+
+.sidebar .logo {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.sidebar .logo img {
+  width: 40px;
+  border-radius: 50%;
+}
+
+.sidebar .logo h2 {
+  font-size: 1.2rem;
+  margin-left: 15px;
+  display: none;
+}
+
+.sidebar:hover .logo h2 {
+  display: block;
+}
+
+.sidebar h4 {
+  display: none;
+  padding: 10px 20px;
+  color: #ffcc00;
+}
+
+.sidebar:hover h4 {
+  display: block;
+}
+
+.links {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.links li {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  transition: background 0.3s ease;
+}
+
+.links li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.links li span {
+  color: #fff;
+  font-size: 24px;
+}
+
+.links li a {
+  margin-left: 10px;
+  text-decoration: none;
+  color: #fff;
+  display: none;
+}
+
+.sidebar:hover .links li a {
+  display: inline-block;
+}
+
+
+.content {
+  margin-left: 130px;
+  padding: 30px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar:hover ~ .content {
+  margin-left: 270px;
+}
+
+
+.contact-section {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.contact-header h2 {
+  font-size: 2.2rem;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.info-item .material-symbols-outlined {
+  font-size: 2rem;
+  color: #e74c3c;
+}
+
+.contact-form {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.btn-submit {
+  background: #2c3e50;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.btn-submit:hover {
+  background: #1a252f;
+}
+
+
+@media (max-width: 768px) {
+  .content {
+    margin-left: 70px;
+    padding: 15px;
+  }
+  
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .sidebar {
+    width: 60px;
+  }
+}
+
+
+footer {
+  background-color: #002f6c;
+  color: white;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-top: 5px solid #ffcc00;
+}
+
+footer section{
+  flex: 10 10 100px;
+  margin: 15px;
+}
+
+footer h3 {
+  color: #ffcc00;
+  margin: 8px 100px;
+}
+
+footer p, footer a {
+  margin: 8px 100px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+footer i {
+  margin-right: 15px;
+  font-size: 20px;
+  color: #ffcc00;
+  transition: transform 0.3s ease;
+}
+
+footer a:hover i {
+  transform: scale(1.3);
+}
+
+footer a:hover {
+  color: #ffcc00;
+}
+
+@media (max-width: 500px) {
+  footer {
+    flex-direction:column;
+    text-align: center;
+  }
+
+  footer p, footer a {
+    justify-content:center;
+  }
+}

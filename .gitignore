@@ -1,0 +1,76 @@
+# Archivos de configuración
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.mjs
+
+# Archivos temporales
+*.log
+*.tmp
+temp/
+logs/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Archivos de IDE
+.vscode/settings.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos de dependencias
+/node_modules
+vendor/
+
+# Archivos de backup
+*.bak
+*.backup
+*~
+
+# Archivos de test y debug
+test-*.html
+test-*.php
+test_*.pdf
+debug-*.php
+*-test.*
+
+# Archivos de documentación temporal
+CORRECCIONES_*.md
+DOCUMENTACION_*.md
+ESTADO_*.md
+SOLUCION_*.md
+IMPLEMENTACION_*.md
+MEJORAS_*.md
+
+# Archivos de base de datos
+*.sql.bak
+database_backup_*
+
+# Archivos de cache
+cache/
+*.cache
+
+# Archivos de sesión PHP
+sessions/
+
+# Archivos de uploads
+uploads/temp/
+*.tmp.jpg
+*.tmp.png
+*.tmp.pdf
+
+# Archivos de reportes temporales
+reports/temp/
+pdf_temp/
+
+# Archivos específicos del proyecto
+SQL.txt
+setup-*.php
+upgrade-*.php
+test-*.sql

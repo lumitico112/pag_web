@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Reserva - Trabajador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .container-fluid { padding: 20px; }
+        .form-section { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .btn-primary { background-color: #007bff; border-color: #007bff; }
+        .alert { margin-top: 15px; }
+        .ruta-info { background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-ticket-alt"></i> Crear Nueva Reserva</h2>
+                    <button class="btn btn-secondary" onclick="window.history.back()">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                </div>
+                
+                <form id="reservaForm">
+                    <!-- Selección de Ruta -->
+                    <div class="form-section">
+                        <h4><i class="fas fa-route"></i> Seleccionar Ruta</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="rutaSelect" class="form-label">Ruta disponible:</label>
+                                <select class="form-select" id="rutaSelect" required>
+                                    <option value="">Seleccionar ruta...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-info mt-4" onclick="cargarRutas()">
+                                    <i class="fas fa-refresh"></i> Actualizar Rutas
+                                </button>
+                            </div>
+                        </div>
+                        <div id="rutaInfo" class="ruta-info d-none">
+                            <!-- Información de la ruta seleccionada -->
+                        </div>
+                    </div>
+                    
+                    <!-- Tipo de Reserva -->
+                    <div class="form-section">
+                        <h4><i class="fas fa-user"></i> Tipo de Reserva</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tipoReserva" id="usuarioRegistrado" value="registrado" checked>
+                                    <label class="form-check-label" for="usuarioRegistrado">
+                                        Usuario Registrado
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tipoReserva" id="usuarioNoRegistrado" value="no_registrado">
+                                    <label class="form-check-label" for="usuarioNoRegistrado">
+                                        Usuario No Registrado
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Datos del Usuario Registrado -->
+                    <div class="form-section" id="datosUsuarioRegistrado">
+                        <h4><i class="fas fa-search"></i> Buscar Usuario Registrado</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="buscarUsuario" class="form-label">Buscar por DNI o Email:</label>
+                                <input type="text" class="form-control" id="buscarUsuario" placeholder="Ingrese DNI o email del usuario">
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-primary mt-4" onclick="buscarUsuario()">
+                                    <i class="fas fa-search"></i> Buscar
+                                </button>
+                            </div>
+                        </div>
+                        <div id="usuarioEncontrado" class="d-none">
+                            <div class="alert alert-success">
+                                <strong>Usuario encontrado:</strong>
+                                <div id="datosUsuarioEncontrado"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Datos del Usuario No Registrado -->
+                    <div class="form-section d-none" id="datosUsuarioNoRegistrado">
+                        <h4><i class="fas fa-user-plus"></i> Datos del Pasajero</h4>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="pasajeroNombre" class="form-label">Nombre Completo:</label>
+                                <input type="text" class="form-control" id="pasajeroNombre" placeholder="Nombre completo del pasajero">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="pasajeroDni" class="form-label">DNI:</label>
+                                <input type="text" class="form-control" id="pasajeroDni" placeholder="DNI del pasajero" maxlength="8">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="pasajeroFechaNacimiento" class="form-label">Fecha de Nacimiento:</label>
+                                <input type="date" class="form-control" id="pasajeroFechaNacimiento">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notas adicionales -->
+                    <div class="form-section">
+                        <h4><i class="fas fa-sticky-note"></i> Notas Adicionales</h4>
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="notasReserva" class="form-label">Notas (opcional):</label>
+                                <textarea class="form-control" id="notasReserva" rows="3" placeholder="Notas adicionales sobre la reserva..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de acción -->
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check"></i> Crear Reserva
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-lg ms-2" onclick="limpiarFormulario()">
+                                <i class="fas fa-eraser"></i> Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Mensajes -->
+                <div id="mensajeExito" class="alert alert-success d-none" role="alert">
+                    <i class="fas fa-check-circle"></i> <span id="mensajeExitoTexto"></span>
+                </div>
+                <div id="mensajeError" class="alert alert-danger d-none" role="alert">
+                    <i class="fas fa-exclamation-circle"></i> <span id="mensajeErrorTexto"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let rutaSeleccionada = null;
+        let usuarioSeleccionado = null;
+        
+        // Cargar rutas disponibles
+        async function cargarRutas() {
+            try {
+                const response = await fetch('../../backend_php/api/rutas.php');
+                const data = await response.json();
+                
+                if (data.success && data.rutas) {
+                    const select = document.getElementById('rutaSelect');
+                    select.innerHTML = '<option value="">Seleccionar ruta...</option>';
+                    
+                    data.rutas.forEach(ruta => {
+                        if (ruta.estado === 'activo' && ruta.disponible) {
+                            const option = document.createElement('option');
+                            option.value = ruta.id;
+                            option.textContent = `${ruta.origen} → ${ruta.destino} - S/. ${ruta.precio} (${ruta.disponibles || 0} disponibles)`;
+                            select.appendChild(option);
+                        }
+                    });
+                } else {
+                    mostrarError('Error al cargar las rutas');
+                }
+            } catch (error) {
+                mostrarError('Error de conexión al cargar rutas');
+            }
+        }
+        
+        // Mostrar información de la ruta seleccionada
+        document.getElementById('rutaSelect').addEventListener('change', async function() {
+            const rutaId = this.value;
+            if (!rutaId) {
+                document.getElementById('rutaInfo').classList.add('d-none');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`../../backend_php/api/rutas.php?id=${rutaId}`);
+                const data = await response.json();
+                
+                if (data.success && data.ruta) {
+                    rutaSeleccionada = data.ruta;
+                    const rutaInfo = document.getElementById('rutaInfo');
+                    rutaInfo.innerHTML = `
+                        <h5>Información de la Ruta</h5>
+                        <div class="row">
+                            <div class="col-md-3"><strong>Origen:</strong> ${data.ruta.origen}</div>
+                            <div class="col-md-3"><strong>Destino:</strong> ${data.ruta.destino}</div>
+                            <div class="col-md-3"><strong>Precio:</strong> S/. ${data.ruta.precio}</div>
+                            <div class="col-md-3"><strong>Disponibles:</strong> ${data.ruta.disponibles || 0}</div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6"><strong>Fecha Salida:</strong> ${new Date(data.ruta.fecha_salida).toLocaleString()}</div>
+                            <div class="col-md-6"><strong>Duración:</strong> ${data.ruta.duracion || 'N/A'}</div>
+                        </div>
+                    `;
+                    rutaInfo.classList.remove('d-none');
+                }
+            } catch (error) {
+                mostrarError('Error al obtener información de la ruta');
+            }
+        });
+        
+        // Manejar cambio de tipo de reserva
+        document.querySelectorAll('input[name="tipoReserva"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const registrado = document.getElementById('datosUsuarioRegistrado');
+                const noRegistrado = document.getElementById('datosUsuarioNoRegistrado');
+                
+                if (this.value === 'registrado') {
+                    registrado.classList.remove('d-none');
+                    noRegistrado.classList.add('d-none');
+                } else {
+                    registrado.classList.add('d-none');
+                    noRegistrado.classList.remove('d-none');
+                }
+            });
+        });
+        
+        // Buscar usuario registrado
+        async function buscarUsuario() {
+            const busqueda = document.getElementById('buscarUsuario').value.trim();
+            if (!busqueda) {
+                mostrarError('Ingrese un DNI o email para buscar');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`../../backend_php/api/users.php?buscar=${encodeURIComponent(busqueda)}`);
+                const data = await response.json();
+                
+                if (data.success && data.usuario) {
+                    usuarioSeleccionado = data.usuario;
+                    const container = document.getElementById('datosUsuarioEncontrado');
+                    container.innerHTML = `
+                        <div><strong>Nombre:</strong> ${data.usuario.nombre}</div>
+                        <div><strong>DNI:</strong> ${data.usuario.dni}</div>
+                        <div><strong>Email:</strong> ${data.usuario.email}</div>
+                        <div><strong>Fecha de Nacimiento:</strong> ${data.usuario.fecha_nacimiento || 'N/A'}</div>
+                    `;
+                    document.getElementById('usuarioEncontrado').classList.remove('d-none');
+                } else {
+                    mostrarError('Usuario no encontrado');
+                    document.getElementById('usuarioEncontrado').classList.add('d-none');
+                }
+            } catch (error) {
+                mostrarError('Error al buscar usuario');
+            }
+        }
+        
+        // Enviar formulario
+        document.getElementById('reservaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!rutaSeleccionada) {
+                mostrarError('Seleccione una ruta');
+                return;
+            }
+            
+            const tipoReserva = document.querySelector('input[name="tipoReserva"]:checked').value;
+            const notas = document.getElementById('notasReserva').value;
+            
+            let datosReserva = {
+                ruta_id: rutaSeleccionada.id,
+                notas: notas,
+                created_by_role: 'trabajador'
+            };
+            
+            // Obtener datos del usuario según el tipo de reserva
+            const usuarioData = JSON.parse(localStorage.getItem('usuario') || '{}');
+            datosReserva.created_by_user_id = usuarioData.id;
+            
+            if (tipoReserva === 'registrado') {
+                if (!usuarioSeleccionado) {
+                    mostrarError('Debe buscar y seleccionar un usuario registrado');
+                    return;
+                }
+                datosReserva.usuario_id = usuarioSeleccionado.usuario_id;
+            } else {
+                // Usuario no registrado
+                const nombre = document.getElementById('pasajeroNombre').value.trim();
+                const dni = document.getElementById('pasajeroDni').value.trim();
+                const fechaNacimiento = document.getElementById('pasajeroFechaNacimiento').value;
+                
+                if (!nombre || !dni || !fechaNacimiento) {
+                    mostrarError('Complete todos los datos del pasajero');
+                    return;
+                }
+                
+                if (dni.length !== 8 || !/^\d{8}$/.test(dni)) {
+                    mostrarError('El DNI debe tener exactamente 8 dígitos');
+                    return;
+                }
+                
+                datosReserva.pasajero_nombre = nombre;
+                datosReserva.pasajero_dni = dni;
+                datosReserva.pasajero_fecha_nacimiento = fechaNacimiento;
+                datosReserva.usuario_id = null;
+            }
+            
+            try {
+                const response = await fetch('../../backend_php/api/reservas.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(datosReserva)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    mostrarExito(`Reserva creada exitosamente. Código: ${result.codigo_reserva}`);
+                    limpiarFormulario();
+                    
+                    // Ofrecer generar PDF
+                    if (confirm('¿Desea generar e imprimir el PDF de la reserva?')) {
+                        window.open(`../../backend_php/api/pdf-reserva.php?reserva_id=${result.reserva_id}&format=html`, '_blank');
+                    }
+                } else {
+                    mostrarError(result.error || 'Error al crear la reserva');
+                }
+            } catch (error) {
+                mostrarError('Error de conexión al crear la reserva');
+            }
+        });
+        
+        // Función para limpiar el formulario
+        function limpiarFormulario() {
+            document.getElementById('reservaForm').reset();
+            document.getElementById('rutaInfo').classList.add('d-none');
+            document.getElementById('usuarioEncontrado').classList.add('d-none');
+            document.getElementById('datosUsuarioNoRegistrado').classList.add('d-none');
+            document.getElementById('datosUsuarioRegistrado').classList.remove('d-none');
+            rutaSeleccionada = null;
+            usuarioSeleccionado = null;
+        }
+        
+        // Funciones para mostrar mensajes
+        function mostrarExito(mensaje) {
+            document.getElementById('mensajeExitoTexto').textContent = mensaje;
+            document.getElementById('mensajeExito').classList.remove('d-none');
+            document.getElementById('mensajeError').classList.add('d-none');
+            setTimeout(() => {
+                document.getElementById('mensajeExito').classList.add('d-none');
+            }, 5000);
+        }
+        
+        function mostrarError(mensaje) {
+            document.getElementById('mensajeErrorTexto').textContent = mensaje;
+            document.getElementById('mensajeError').classList.remove('d-none');
+            document.getElementById('mensajeExito').classList.add('d-none');
+            setTimeout(() => {
+                document.getElementById('mensajeError').classList.add('d-none');
+            }, 5000);
+        }
+        
+        // Cargar rutas al iniciar
+        cargarRutas();
+    </script>
+</body>
+</html>

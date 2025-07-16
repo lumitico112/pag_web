@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>UTPTRAVEL | Transporte Interprovincial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/contacto.css" />
+  <link rel="stylesheet" href="../css/user-sidebar.css">
+  <link rel="icon" type="image/x-icon" href="../img/logo.png">
+</head>
+
+<body>
+  <!-- Sidebar de usuario -->
+  <!--#include virtual="../view/user-sidebar.html" -->
+  <div id="userSidebarContainer"></div>
+
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">UTPTRAVEL</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNav"
+          aria-controls="menuNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menuNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="servicios.html">Rutas y Servicios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="comprar.html">Comprar Pasajes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="nosotros.html">Nosotros</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contacto.html">Contacto</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="login.html">Iniciar Sesión</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Sección de Bienvenida -->
+    <section class="bienvenida text-center py-5 mb-5 bg-light">
+      <div class="container">
+        <h1 class="display-4 mb-4 text-primary">Bienvenido a UTPTRAVEL</h1>
+        <p class="lead mb-4">Tu mejor opción para viajar cómodo y seguro entre provincias.</p>
+        <a href="comprar.html" class="btn btn-primary btn-lg">
+          <i class="fas fa-ticket-alt"></i> Comprar Pasajes
+        </a>
+      </div>
+    </section>
+
+    <!-- Sección de Rutas -->
+    <section class="rutas py-5">
+      <div class="container">
+        <h2 class="text-center mb-5">
+          <i class="fas fa-route text-primary"></i>
+          Nuestras Rutas Disponibles
+        </h2>
+        <div class="rutas-scroll-container position-relative">
+          <button class="btn btn-primary btn-sm rutas-nav-btn rutas-nav-prev" id="rutasPrev" aria-label="Ruta anterior">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div id="rutas-dinamicas" class="rutas-scroll-wrapper" tabindex="0" role="region" aria-label="Rutas disponibles">
+            <!-- Aquí se insertarán las rutas dinámicamente -->
+          </div>
+          <button class="btn btn-primary btn-sm rutas-nav-btn rutas-nav-next" id="rutasNext" aria-label="Siguiente ruta">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          <div class="rutas-indicators" id="rutasIndicators">
+            <!-- Indicadores de página -->
+          </div>
+          <div class="scroll-hint text-center mt-3">
+            <small class="text-muted">
+              <i class="fas fa-mouse"></i> Usa los botones para navegar
+            </small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de Servicios -->
+    <section class="servicios-bus py-5 bg-light">
+      <div class="container">
+        <h2 class="text-center mb-5">
+          <i class="fas fa-bus text-primary"></i>
+          Servicios a Bordo
+        </h2>
+        <div class="row g-4 justify-content-center">
+          <div class="col-lg-3 col-md-6">
+            <div class="card text-center h-100 shadow-sm">
+              <div class="card-body">
+                <i class="fas fa-wifi fa-2x mb-3 text-primary"></i>
+                <h5 class="card-title">Wi-Fi gratuito</h5>
+                <p class="card-text">Conéctate en todo momento durante tu viaje.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="card text-center h-100 shadow-sm">
+              <div class="card-body">
+                <i class="fas fa-couch fa-2x mb-3 text-success"></i>
+                <h5 class="card-title">Asientos reclinables</h5>
+                <p class="card-text">Relájate en asientos ergonómicos y espaciosos.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="card text-center h-100 shadow-sm">
+              <div class="card-body">
+                <i class="fas fa-tv fa-2x mb-3 text-danger"></i>
+                <h5 class="card-title">Entretenimiento a bordo</h5>
+                <p class="card-text">Películas y música para un viaje agradable.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="card text-center h-100 shadow-sm">
+              <div class="card-body">
+                <i class="fas fa-toilet fa-2x mb-3 text-warning"></i>
+                <h5 class="card-title">Baño y aire acondicionado</h5>
+                <p class="card-text">Comodidad garantizada en todo momento.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de Opiniones -->
+    <section class="opiniones py-5">
+      <div class="container">
+        <h2 class="text-center mb-5">
+          <i class="fas fa-star text-warning"></i>
+          Opiniones de nuestros clientes
+        </h2>
+        <div class="row g-4 justify-content-center">
+          <div class="col-md-6 col-lg-5">
+            <div class="card text-center h-100 shadow-sm">
+              <img src="../img/cliente1.jpg" class="card-img-top rounded-circle w-25 mx-auto mt-3" alt="Cliente Ana M.">
+              <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                  <p class="mb-3">"Excelente servicio, muy puntuales y cómodos. ¡Volveré a viajar con ustedes!"</p>
+                  <footer class="blockquote-footer">Ana M.</footer>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-5">
+            <div class="card text-center h-100 shadow-sm">
+              <img src="../img/cliente2.jpg" class="card-img-top rounded-circle w-25 mx-auto mt-3" alt="Cliente Luis R.">
+              <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                  <p class="mb-3">"Los buses están súper limpios y el personal es muy amable. 100% recomendado."</p>
+                  <footer class="blockquote-footer">Luis R.</footer>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <section class="info-contacto">
+      <div>
+        <h3>Contacto</h3>
+        <p><i class="fas fa-phone"></i> +51 919 543 387</p>
+        <p><i class="fas fa-envelope"></i> viajesseguro@utptravel.com</p>
+        <p><i class="fas fa-map-marker-alt"></i> Av. Central 123, Lima, Perú</p>
+      </div>
+    </section>
+    <section class="redes">
+      <div>
+        <h3>Síguenos</h3>
+        <div><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></div>
+        <div><a href="#"><i class="fab fa-instagram"></i> Instagram</a></div>
+        <div><a href="#"><i class="fab fa-x-twitter"></i> Twitter</a></div>
+        <div><a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a></div>
+      </div>
+    </section>
+  </footer>
+
+  <script>
+    var API_BASE_URL = 'http://localhost:8000/backend_php/api';
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/auth.js?v=20250107"></script>
+  <script src="../js/user-sidebar-loader.js"></script>
+  <script src="../js/user-sidebar.js"></script>
+  <script src="../js/api-php.js?v=20250107"></script>
+  <script src="../js/index-rutas.js?v=20250107"></script>
+</body>
+
+</html>

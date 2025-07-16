@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración | UTPTRAVEL</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin-dashboard.css">
+  <link rel="icon" type="image/x-icon" href="../img/logo.png">
+</head>
+<body class="admin-layout">
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark admin-navbar fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-bus"></i> UTPTRAVEL Admin
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminSidebar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-nav ms-auto">
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="fas fa-user"></i> <span id="admin-name">Administrador</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="perfil.html"><i class="fas fa-user-edit"></i> Mi Perfil</a></li>
+            <li><a class="dropdown-item" href="index.html"><i class="fas fa-home"></i> Sitio Web</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sidebar -->
+  <div class="offcanvas offcanvas-start admin-sidebar" tabindex="-1" id="adminSidebar">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Panel de Control</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <nav class="admin-nav">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" data-section="dashboard">
+              <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-section="rutas">
+              <i class="fas fa-route"></i> Gestión de Rutas
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-section="usuarios">
+              <i class="fas fa-users"></i> Gestión de Usuarios
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-section="historial">
+              <i class="fas fa-history"></i> Historial de Viajes
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-section="estadisticas">
+              <i class="fas fa-chart-bar"></i> Estadísticas
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="container-fluid">
+      <!-- Dashboard Section -->
+      <div id="dashboard-section" class="admin-section active">
+        <div class="page-header">
+          <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+          <div>
+            <small class="text-muted">
+              <i class="fas fa-info-circle"></i> Procesamiento automático de rutas vencidas activo
+            </small>
+          </div>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-card stat-primary">
+              <div class="stat-icon">
+                <i class="fas fa-route"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="total-rutas-activas">0</h3>
+                <p>Rutas Activas</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-card stat-success">
+              <div class="stat-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="total-usuarios-dash">0</h3>
+                <p>Usuarios Registrados</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-card stat-info">
+              <div class="stat-icon">
+                <i class="fas fa-ticket-alt"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="total-reservas">0</h3>
+                <p>Reservas Hoy</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-card stat-warning">
+              <div class="stat-icon">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="ingresos-hoy">S/ 0</h3>
+                <p>Ingresos Hoy</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="row">
+          <div class="col-md-8">
+            <div class="admin-card">
+              <div class="card-header">
+                <h5><i class="fas fa-clock"></i> Actividad Reciente</h5>
+              </div>
+              <div class="card-body">
+                <div id="actividad-reciente">
+                  <div class="text-center py-4">
+                    <div class="spinner-border text-primary"></div>
+                    <p class="mt-2">Cargando actividad...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="admin-card">
+              <div class="card-header">
+                <h5><i class="fas fa-exclamation-triangle"></i> Alertas</h5>
+              </div>
+              <div class="card-body">
+                <div id="alertas-sistema">
+                  <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    Sistema funcionando correctamente
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rutas Section -->
+      <div id="rutas-section" class="admin-section">
+        <div class="page-header">
+          <h1><i class="fas fa-route"></i> Gestión de Rutas</h1>
+          <button class="btn btn-primary" onclick="mostrarFormularioRuta()">
+            <i class="fas fa-plus"></i> Nueva Ruta
+          </button>
+        </div>
+
+        <!-- Form Container -->
+        <div id="form-ruta-container" class="admin-card mb-4" style="display: none;">
+          <div class="card-header">
+            <h5><i class="fas fa-plus"></i> <span id="form-title">Nueva Ruta</span></h5>
+          </div>
+          <div class="card-body">
+            <!-- Configuración del Sistema de Ubicaciones -->
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <div class="alert alert-info">
+                  <h6 class="mb-3"><i class="fas fa-cog"></i> Sistema de Ubicaciones</h6>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label class="form-label">Fuente de Datos:</label>
+                      <select class="form-control" id="ubicaciones-source">
+                        <option value="local">Datos Locales (Rápido)</option>
+                        <option value="geodb">GeoDB Cities API (Más Preciso)</option>
+                        <option value="hibrido">Híbrido (Local + API)</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Estado:</label>
+                      <div id="ubicaciones-status" class="form-control-plaintext">
+                        <span class="badge bg-success">Sistema Local Activo</span>
+                      </div>
+                    </div>
+                  </div>
+                  <small class="text-muted">
+                    <strong>Local:</strong> Ciudades principales del Perú, cálculos rápidos<br>
+                    <strong>GeoDB API:</strong> Base de datos mundial, más preciso pero requiere internet<br>
+                    <strong>Híbrido:</strong> Usa API cuando está disponible, fallback a local
+                  </small>
+                </div>
+              </div>
+            </div>
+            
+            <form id="rutaForm">
+              <!-- Origen -->
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <h6 class="text-primary"><i class="fas fa-map-marker-alt"></i> Ubicación de Origen</h6>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Región</label>
+                  <select class="form-control" id="regionOrigen" name="regionOrigen" required>
+                    <option value="">Seleccionar Región</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Provincia</label>
+                  <select class="form-control" id="provinciaOrigen" name="provinciaOrigen" required>
+                    <option value="">Seleccionar Provincia</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Ciudad</label>
+                  <select class="form-control" id="ciudadOrigen" name="ciudadOrigen" required>
+                    <option value="">Seleccionar Ciudad</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Destino -->
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <h6 class="text-success"><i class="fas fa-flag-checkered"></i> Ubicación de Destino</h6>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Región</label>
+                  <select class="form-control" id="regionDestino" name="regionDestino" required>
+                    <option value="">Seleccionar Región</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Provincia</label>
+                  <select class="form-control" id="provinciaDestino" name="provinciaDestino" required>
+                    <option value="">Seleccionar Provincia</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Ciudad</label>
+                  <select class="form-control" id="ciudadDestino" name="ciudadDestino" required>
+                    <option value="">Seleccionar Ciudad</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Información de la ruta -->
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <h6 class="text-info"><i class="fas fa-info-circle"></i> Información del Viaje 
+                    <small class="text-muted" id="calculo-info">(Sistema: Local)</small>
+                    <div class="form-check form-switch d-inline-block ms-3">
+                      <input class="form-check-input" type="checkbox" id="modoManual" checked>
+                      <label class="form-check-label" for="modoManual">
+                        <small>Edición Manual</small>
+                      </label>
+                    </div>
+                  </h6>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">
+                    Distancia (km)
+                    <button type="button" class="btn btn-sm btn-outline-secondary ms-1" onclick="calcularAutomatico()" title="Calcular automáticamente">
+                      <i class="fas fa-sync-alt"></i>
+                    </button>
+                  </label>
+                  <input type="number" class="form-control" id="distancia" name="distancia" step="0.1" min="1" max="5000">
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">
+                    Precio (S/)
+                    <button type="button" class="btn btn-sm btn-outline-secondary ms-1" onclick="calcularPrecioPorDistancia()" title="Calcular precio basado en distancia">
+                      <i class="fas fa-calculator"></i>
+                    </button>
+                  </label>
+                  <input type="number" class="form-control" id="precio" name="precio" step="0.01" min="10" max="500">
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">
+                    Duración
+                    <button type="button" class="btn btn-sm btn-outline-secondary ms-1" onclick="calcularDuracionPorDistancia()" title="Calcular duración basada en distancia">
+                      <i class="fas fa-clock"></i>
+                    </button>
+                  </label>
+                  <input type="text" class="form-control" id="duracion" name="duracion" placeholder="HH:MM" pattern="[0-9]{1,2}:[0-9]{2}">
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Capacidad</label>
+                  <input type="number" class="form-control" id="capacidad" name="capacidad" value="40" min="1" max="60" required>
+                </div>
+              </div>
+
+              <!-- Ayudas para cálculo manual -->
+              <div class="row mb-3" id="ayudas-calculo">
+                <div class="col-md-12">
+                  <div class="alert alert-info">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 class="mb-2"><i class="fas fa-lightbulb"></i> Ayudas para Cálculo Manual</h6>
+                      </div>
+                      <button type="button" class="btn btn-sm btn-primary" onclick="mostrarPreciosReferencia()">
+                        <i class="fas fa-table"></i> Ver Tabla de Precios
+                      </button>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <small><strong>Precios sugeridos por km:</strong></small><br>
+                        <small>• Rutas cortas (&lt;200km): S/ 0.15-0.20 por km</small><br>
+                        <small>• Rutas medias (200-600km): S/ 0.10-0.15 por km</small><br>
+                        <small>• Rutas largas (&gt;600km): S/ 0.08-0.12 por km</small>
+                      </div>
+                      <div class="col-md-4">
+                        <small><strong>Velocidades promedio:</strong></small><br>
+                        <small>• Carretera asfaltada: 60-80 km/h</small><br>
+                        <small>• Carretera serrana: 40-60 km/h</small><br>
+                        <small>• Carretera costa: 70-90 km/h</small>
+                      </div>
+                      <div class="col-md-4">
+                        <small><strong>Precios base sugeridos:</strong></small><br>
+                        <small>• Lima-Norte: S/ 15-25 base</small><br>
+                        <small>• Lima-Sur: S/ 20-30 base</small><br>
+                        <small>• Rutas interprovinciales: S/ 25-35 base</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Horarios -->
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <h6 class="text-warning"><i class="fas fa-clock"></i> Horarios</h6>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Fecha de Salida</label>
+                  <input type="date" class="form-control" id="fechaSalida" name="fechaSalida" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Hora de Salida</label>
+                  <input type="time" class="form-control" id="horaSalida" name="horaSalida" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Fecha de Llegada</label>
+                  <input type="date" class="form-control" id="fechaLlegada" name="fechaLlegada" readonly>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Hora de Llegada</label>
+                  <input type="time" class="form-control" id="horaLlegada" name="horaLlegada" readonly>
+                </div>
+              </div>
+
+              <!-- Detalles adicionales -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">
+                    <i class="fas fa-image"></i> Imagen de la Ruta
+                    <small class="text-muted">(Automática o manual)</small>
+                  </label>
+                  
+                  <!-- Selector automático / manual -->
+                  <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="imagenAutomatica" checked>
+                    <label class="form-check-label" for="imagenAutomatica">
+                      <small>Cargar imagen automáticamente desde destino</small>
+                    </label>
+                  </div>
+                  
+                  <!-- Campo de imagen automática -->
+                  <div id="imagen-automatica-container">
+                    <input type="text" class="form-control" id="imagenAutomatica" name="imagenAutomatica" 
+                           placeholder="Ejemplo: Lima.jpg" readonly>
+                    <small class="text-muted">
+                      <i class="fas fa-info-circle"></i> 
+                      La imagen se buscará automáticamente por el nombre de la ciudad destino, por ejemplo: <code>Lima.jpg</code>.
+                      Asegúrate de que el archivo exista y el nombre coincida exactamente con la ciudad destino.
+                    </small>
+                  </div>
+                  
+                  <!-- Campo manual (oculto inicialmente) -->
+                  <div id="imagen-manual-container" style="display: none;">
+                    <input type="url" class="form-control" id="imagen" name="imagen" 
+                           placeholder="https://ejemplo.com/imagen.jpg o ruta/local.jpg">
+                    <small class="text-muted">
+                      <i class="fas fa-link"></i> 
+                      Ingresa URL completa o ruta relativa
+                    </small>
+                  </div>
+                  
+                  <!-- Botones de acción -->
+                  <div class="mt-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="preview-imagen">
+                      <i class="fas fa-eye"></i> Vista Previa
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-info" id="verificar-imagen">
+                      <i class="fas fa-check-circle"></i> Verificar
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Estado</label>
+                  <select class="form-control" id="estado" name="estado" required>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                    <option value="mantenimiento">En Mantenimiento</option>
+                  </select>
+                  
+                  <!-- Preview de imagen -->
+                  <div id="imagen-preview-container" class="mt-3" style="display: none;">
+                    <label class="form-label">Vista Previa</label>
+                    <div class="border rounded p-2" style="max-height: 150px; overflow: hidden;">
+                      <img id="imagen-preview" src="" alt="Preview" class="img-fluid rounded" style="max-height: 130px;">
+                    </div>
+                    <div id="imagen-status" class="mt-1"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-save"></i> Guardar Ruta
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="ocultarFormularioRuta()">
+                  <i class="fas fa-times"></i> Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Rutas List -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h5><i class="fas fa-list"></i> Lista de Rutas</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Ruta</th>
+                    <th>Fecha/Hora</th>
+                    <th>Precio</th>
+                    <th>Duración</th>
+                    <th>Distancia</th>
+                    <th>Capacidad</th>
+                    <th>Reservas</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tablaRutas"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Usuarios Section -->
+      <div id="usuarios-section" class="admin-section">
+        <div class="page-header">
+          <h1><i class="fas fa-users"></i> Gestión de Usuarios</h1>
+        </div>
+
+        <!-- User Type Tabs -->
+        <div class="admin-card mb-4">
+          <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="userTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin-panel" type="button" role="tab">
+                  <i class="fas fa-user-shield"></i> Administradores <span id="count-admin" class="badge bg-danger ms-1">0</span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="trabajador-tab" data-bs-toggle="tab" data-bs-target="#trabajador-panel" type="button" role="tab">
+                  <i class="fas fa-user-tie"></i> Trabajadores <span id="count-trabajador" class="badge bg-warning ms-1">0</span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="usuario-tab" data-bs-toggle="tab" data-bs-target="#usuario-panel" type="button" role="tab">
+                  <i class="fas fa-user"></i> Usuarios <span id="count-usuario" class="badge bg-success ms-1">0</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+            <div class="tab-content">
+              <!-- Administradores -->
+              <div class="tab-pane fade show active" id="admin-panel" role="tabpanel">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Registro</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tabla-admin"></tbody>
+                  </table>
+                </div>
+              </div>
+              
+              <!-- Trabajadores -->
+              <div class="tab-pane fade" id="trabajador-panel" role="tabpanel">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Registro</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tabla-trabajador"></tbody>
+                  </table>
+                </div>
+              </div>
+              
+              <!-- Usuarios -->
+              <div class="tab-pane fade" id="usuario-panel" role="tabpanel">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Registro</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tabla-usuario"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historial Section -->
+      <div id="historial-section" class="admin-section">
+        <div class="page-header">
+          <h1><i class="fas fa-history"></i> Historial de Viajes</h1>
+          <div>
+            <button class="btn btn-info" onclick="window.AdminHistorial.cargarHistorial()">
+              <i class="fas fa-sync"></i> Actualizar Todo
+            </button>
+            <small class="text-muted ms-2">
+              <i class="fas fa-info-circle"></i> Las rutas vencidas se procesan automáticamente
+            </small>
+          </div>
+        </div>
+
+        <!-- Resumen de Estado -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="stat-card stat-success">
+              <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="count-rutas-activas">0</h3>
+                <p>Rutas Activas</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card stat-info">
+              <div class="stat-icon">
+                <i class="fas fa-flag-checkered"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="count-rutas-concluidas">0</h3>
+                <p>Rutas Concluidas</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card stat-warning">
+              <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="count-rutas-vencidas">0</h3>
+                <p>Rutas Vencidas</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card stat-primary">
+              <div class="stat-icon">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="total-ingresos-concluidas">S/ 0</h3>
+                <p>Ingresos Totales</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestañas para separar rutas -->
+        <div class="admin-card">
+          <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="historialTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="rutas-activas-tab" data-bs-toggle="tab" data-bs-target="#rutas-activas-panel" type="button" role="tab">
+                  <i class="fas fa-route"></i> Rutas Activas <span id="badge-activas" class="badge bg-success ms-1">0</span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="rutas-concluidas-tab" data-bs-toggle="tab" data-bs-target="#rutas-concluidas-panel" type="button" role="tab">
+                  <i class="fas fa-check-circle"></i> Rutas Concluidas <span id="badge-concluidas" class="badge bg-info ms-1">0</span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="rutas-vencidas-tab" data-bs-toggle="tab" data-bs-target="#rutas-vencidas-panel" type="button" role="tab">
+                  <i class="fas fa-exclamation-triangle"></i> Rutas Vencidas <span id="badge-vencidas" class="badge bg-warning ms-1">0</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+            <div class="tab-content">
+              <!-- Rutas Activas -->
+              <div class="tab-pane fade show active" id="rutas-activas-panel" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 class="mb-0">
+                    <i class="fas fa-route text-success"></i> Rutas Activas
+                    <small class="text-muted">(Próximas salidas)</small>
+                  </h6>
+                  <button class="btn btn-sm btn-success" onclick="window.AdminHistorial.cargarRutasActivas()">
+                    <i class="fas fa-sync"></i> Actualizar
+                  </button>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Ruta</th>
+                        <th>Fecha/Hora Salida</th>
+                        <th>Fecha/Hora Llegada</th>
+                        <th>Precio</th>
+                        <th>Capacidad</th>
+                        <th>Reservas</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tablaRutasActivas"></tbody>
+                  </table>
+                </div>
+              </div>
+              
+              <!-- Rutas Concluidas -->
+              <div class="tab-pane fade" id="rutas-concluidas-panel" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 class="mb-0">
+                    <i class="fas fa-check-circle text-info"></i> Rutas Concluidas
+                    <small class="text-muted">(Viajes terminados)</small>
+                  </h6>
+                  <div>
+                    <button class="btn btn-sm btn-info" onclick="window.AdminHistorial.cargarRutasConcluidas()">
+                      <i class="fas fa-sync"></i> Actualizar
+                    </button>
+                    <button class="btn btn-sm btn-primary" onclick="window.AdminHistorial.generarReporteGeneral()">
+                      <i class="fas fa-file-pdf"></i> Reporte General
+                    </button>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Ruta</th>
+                        <th>Fecha Viaje</th>
+                        <th>Duración</th>
+                        <th>Pasajeros</th>
+                        <th>Ingresos</th>
+                        <th>Capacidad</th>
+                        <th>Fecha Conclusión</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tablaRutasConcluidas"></tbody>
+                  </table>
+                </div>
+              </div>
+              
+              <!-- Rutas Vencidas -->
+              <div class="tab-pane fade" id="rutas-vencidas-panel" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 class="mb-0">
+                    <i class="fas fa-exclamation-triangle text-warning"></i> Rutas Vencidas
+                    <small class="text-muted">(Requieren procesamiento)</small>
+                  </h6>
+                  <div>
+                    <button class="btn btn-sm btn-warning" onclick="window.AdminHistorial.verificarRutasVencidas()">
+                      <i class="fas fa-sync"></i> Verificar
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="window.AdminHistorial.procesarRutasVencidas()">
+                      <i class="fas fa-forward"></i> Procesar Todas
+                    </button>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Ruta</th>
+                        <th>Fecha Vencimiento</th>
+                        <th>Días Vencida</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tablaRutasVencidas"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estadísticas Section -->
+      <div id="estadisticas-section" class="admin-section">
+        <div class="page-header">
+          <h1><i class="fas fa-chart-bar"></i> Estadísticas</h1>
+          <div>
+            <button class="btn btn-info" onclick="mostrarEstadisticas()">
+              <i class="fas fa-sync"></i> Actualizar Estadísticas
+            </button>
+            <small class="text-muted ms-2">
+              <i class="fas fa-info-circle"></i> Datos actualizados automáticamente
+            </small>
+          </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <div class="admin-card stat-card stat-info">
+              <div class="card-body text-center">
+                <h3 id="stat-total-concluidas">0</h3>
+                <p>Rutas Concluidas</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="admin-card stat-card stat-success">
+              <div class="card-body text-center">
+                <h3 id="stat-total-pasajeros">0</h3>
+                <p>Pasajeros Transportados</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="admin-card stat-card stat-warning">
+              <div class="card-body text-center">
+                <h3 id="stat-total-ingresos">S/ 0.00</h3>
+                <p>Ingresos Generados</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts placeholder -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h5><i class="fas fa-chart-line"></i> Gráficas de Rendimiento</h5>
+          </div>
+          <div class="card-body">
+            <div class="text-center py-5">
+              <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
+              <p class="text-muted">Gráficas de estadísticas próximamente</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal para editar usuario -->
+  <div class="modal fade" id="modalEditarUsuario" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fas fa-user-edit"></i> Editar Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formEditarUsuario">
+            <input type="hidden" id="edit-user-id">
+            <div class="mb-3">
+              <label class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="edit-user-name" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="edit-user-email" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Rol</label>
+              <select class="form-control" id="edit-user-rol" required>
+                <option value="admin">Administrador</option>
+                <option value="trabajador">Trabajador</option>
+                <option value="usuario">Usuario</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" onclick="guardarCambiosUsuario()">Guardar Cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para detalles -->
+  <div class="modal fade" id="modalDetalleRutaConcluida" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fas fa-info-circle"></i> Detalle de Ruta Concluida</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="detalleRutaContent">
+            <div class="text-center">
+              <div class="spinner-border text-primary"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Definir variables globales esenciales PRIMERO -->
+  <script>
+    // Variable global esencial
+    window.API_BASE_URL = 'http://localhost:8000/backend_php/api';
+    
+    // Sistema de debug temporal para verificar carga
+    let scriptsLoaded = {};
+    
+    function logScriptLoad(scriptName, status) {
+      scriptsLoaded[scriptName] = status;
+      console.log(`[ADMIN] ${scriptName}: ${status}`);
+    }
+    
+    // Capturar errores
+    window.addEventListener('error', function(e) {
+      console.error(`[ADMIN ERROR] ${e.message} en ${e.filename}:${e.lineno}`);
+    });
+    
+    // Debug del API
+    console.log(`[ADMIN] API Base URL configurada: ${window.API_BASE_URL}`);
+    
+    // Test de conectividad del API
+    fetch(`${window.API_BASE_URL}/test-connection.php`)
+      .then(response => response.text())
+      .then(data => {
+        console.log('[ADMIN] Test de conectividad API:', data.substring(0, 100));
+      })
+      .catch(error => {
+        console.error('[ADMIN] Error en test de conectividad:', error);
+      });
+  </script>
+  
+  <!-- Cargar scripts en orden específico -->
+  <script>logScriptLoad('auth.js', 'loading');</script>
+  <script src="../js/auth.js?v=20250107"></script>
+  <script>logScriptLoad('auth.js', 'loaded');</script>
+  
+  <script>logScriptLoad('api-php.js', 'loading');</script>
+  <script src="../js/api-php.js?v=20250107"></script>
+  <script>logScriptLoad('api-php.js', 'loaded');</script>
+  
+  <script>logScriptLoad('ubicaciones-peru.js', 'loading');</script>
+  <script src="../js/ubicaciones-peru.js?v=20250107"></script>
+  <script>logScriptLoad('ubicaciones-peru.js', 'loaded');</script>
+  
+  <script>logScriptLoad('geodb-cities.js', 'loading');</script>
+  <script src="../js/geodb-cities.js?v=20250107"></script>
+  <script>logScriptLoad('geodb-cities.js', 'loaded');</script>
+  
+  <script>logScriptLoad('ubicaciones-config.js', 'loading');</script>
+  <script src="../js/ubicaciones-config.js?v=20250107"></script>
+  <script>logScriptLoad('ubicaciones-config.js', 'loaded');</script>
+  
+  <script>logScriptLoad('admin-main.js', 'loading');</script>
+  <script src="../js/admin/admin-main.js?v=20250107"></script>
+  <script>logScriptLoad('admin-main.js', 'loaded');</script>
+  
+  <script>logScriptLoad('admin-rutas.js', 'loading');</script>
+  <script src="../js/admin/admin-rutas.js?v=20250107_v2"></script>
+  <script>logScriptLoad('admin-rutas.js', 'loaded');</script>
+  
+  <script>logScriptLoad('admin-usuarios.js', 'loading');</script>
+  <script src="../js/admin/admin-usuarios.js?v=20250107"></script>
+  <script>logScriptLoad('admin-usuarios.js', 'loaded');</script>
+  
+  <script>logScriptLoad('admin-historial.js', 'loading');</script>
+  <script src="../js/admin/admin-historial.js?v=20250107"></script>
+  <script>logScriptLoad('admin-historial.js', 'loaded');</script>
+  
+  <script>logScriptLoad('admin-estadisticas.js', 'loading');</script>
+  <script src="../js/admin/admin-estadisticas.js?v=20250107"></script>
+  <script>logScriptLoad('admin-estadisticas.js', 'loaded');</script>
+  
+  <!-- Verificación final -->
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(() => {
+        console.log('[ADMIN] Estado final de scripts:', scriptsLoaded);
+        console.log('[ADMIN] UBICACIONES_CONFIG:', typeof window.UBICACIONES_CONFIG);
+        console.log('[ADMIN] cargarRegionesSegunSistema:', typeof window.cargarRegionesSegunSistema);
+        console.log('[ADMIN] AdminRutas:', typeof window.AdminRutas);
+        console.log('[ADMIN] mostrarFormularioRuta:', typeof window.mostrarFormularioRuta);
+      }, 3000);
+    });
+  </script>
+</body>
+</html>

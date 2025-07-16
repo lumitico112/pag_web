@@ -1,0 +1,152 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins :wght@400;600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: url('../img/fondo1.jpg') no-repeat center center/cover;
+  color: #333;
+  line-height: 1.6;
+  background-attachment: fixed;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #010912;
+  padding: 15px 20px;
+}
+
+.navbar .nav-link {
+  color: white !important;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.navbar .nav-link:hover {
+  color: #ffcc00 !important;
+}
+
+.navbar .nav-link.active {
+  color: #4CAF50 !important;
+}
+
+.navbar-nav {
+  gap: 25px;
+  align-items: center;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Main */
+.section-title {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Historial */
+#historial, .historial-scroll {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  gap: 1.5rem;
+  padding: 1.5rem 0.5rem;
+  min-height: 320px;
+  align-items: stretch;
+  width: 100%;
+  scrollbar-color: #0066cc #e0e0e0;
+  scrollbar-width: thin;
+}
+
+#historial::-webkit-scrollbar, .historial-scroll::-webkit-scrollbar {
+  height: 10px;
+}
+#historial::-webkit-scrollbar-thumb, .historial-scroll::-webkit-scrollbar-thumb {
+  background: #0066cc;
+  border-radius: 8px;
+}
+#historial::-webkit-scrollbar-track, .historial-scroll::-webkit-scrollbar-track {
+  background: #e0e0e0;
+  border-radius: 8px;
+}
+
+#historial .card, #historial .historial-card, .historial-card {
+  min-width: 340px !important;
+  max-width: 340px !important;
+  width: 340px !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border-radius: 16px;
+  background: #fff;
+  margin: 0;
+  border: none;
+}
+
+#historial .card-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Eliminar posibles reglas heredadas de Bootstrap */
+#historial .card, #historial .historial-card {
+  float: none !important;
+  display: flex !important;
+  width: 340px !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 400px) {
+  #historial .card, #historial .historial-card, .historial-card {
+    min-width: 90vw !important;
+    max-width: 90vw !important;
+    width: 90vw !important;
+  }
+}
+
+/* Filtros */
+.filters {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+footer {
+  background: #010912;
+  color: #fff;
+  padding: 40px 20px;
+  margin-top: 60px;
+}
+
+footer h3 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+footer p, footer a {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+footer a:hover {
+  color: #ffcc00;
+}

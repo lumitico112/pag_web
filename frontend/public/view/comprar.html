@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTPTRAVEL | Comprar Pasajes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/comprar.css">
+    <link rel="stylesheet" href="../css/user-sidebar.css">
+    <link rel="icon" type="image/x-icon" href="../img/logo.png">
+</head>
+<body>
+  <!-- Sidebar de usuario -->
+  <div id="userSidebarContainer"></div>
+
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">UTPTRAVEL</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNav"
+          aria-controls="menuNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menuNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="servicios.html">Rutas y Servicios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="comprar.html">Comprar Pasajes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="nosotros.html">Nosotros</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contacto.html">Contacto</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="login.html">Iniciar Sesión</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Sección de Bienvenida -->
+    <section class="bienvenida text-center py-5 mb-5">
+      <div class="container">
+        <h1 class="display-4 mb-4">
+          <i class="fas fa-ticket-alt"></i>
+          Comprar Pasajes
+        </h1>
+        <p class="lead mb-4">Elige tu ruta y viaja cómodo y seguro con UTPTRAVEL</p>
+      </div>
+    </section>
+
+    <!-- Sección de Rutas -->
+    <section class="rutas py-5">
+      <div class="container">
+        <h2 class="text-center mb-5">
+          <i class="fas fa-route text-primary"></i>
+          Rutas Disponibles
+        </h2>
+        
+        <!-- Buscador de rutas -->
+        <div class="row justify-content-center mb-5">
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title text-center mb-4">
+                  <i class="fas fa-search text-primary"></i>
+                  Buscar tu Ruta Ideal
+                </h5>
+                <div class="row g-3 align-items-end">
+                  <div class="col-lg-3 col-md-6">
+                    <label for="origen" class="form-label fw-bold">
+                      <i class="fas fa-map-marker-alt text-success"></i> Origen
+                    </label>
+                    <select class="form-select" id="origen">
+                      <option value="">Seleccionar origen</option>
+                    </select>
+                  </div>
+                  <div class="col-lg-3 col-md-6">
+                    <label for="destino" class="form-label fw-bold">
+                      <i class="fas fa-flag-checkered text-danger"></i> Destino
+                    </label>
+                    <select class="form-select" id="destino">
+                      <option value="">Seleccionar destino</option>
+                    </select>
+                  </div>
+                  <div class="col-lg-3 col-md-6">
+                    <label for="fecha" class="form-label fw-bold">
+                      <i class="fas fa-calendar text-info"></i> Fecha
+                    </label>
+                    <input type="date" class="form-control" id="fecha" placeholder="Opcional">
+                  </div>
+                  <div class="col-lg-3 col-md-6">
+                    <div class="d-flex gap-2">
+                      <button type="button" class="btn btn-primary flex-fill" onclick="buscarRutas()">
+                        <i class="fas fa-search"></i> Buscar
+                      </button>
+                      <button type="button" class="btn btn-outline-secondary flex-fill" onclick="limpiarBusqueda()">
+                        <i class="fas fa-eraser"></i> Limpiar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="rutas-scroll-container position-relative">
+          <button class="btn btn-primary btn-sm rutas-nav-btn rutas-nav-prev" id="rutasPrev" aria-label="Ruta anterior">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div id="rutas-dinamicas" class="rutas-scroll-wrapper" tabindex="0" role="region" aria-label="Rutas disponibles">
+            <!-- Aquí se insertarán las rutas dinámicamente -->
+          </div>
+          <button class="btn btn-primary btn-sm rutas-nav-btn rutas-nav-next" id="rutasNext" aria-label="Siguiente ruta">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          <div class="rutas-indicators" id="rutasIndicators">
+            <!-- Indicadores de página -->
+          </div>
+          <div class="scroll-hint text-center mt-3">
+            <small class="text-muted">
+              <i class="fas fa-mouse"></i> Usa los botones para navegar entre rutas
+            </small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de información dinámica -->
+    <section id="info-dinamica" class="py-5">
+      <div class="container">
+        <!-- El contenido se cargará dinámicamente -->
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <section class="info-contacto">
+      <div>
+        <h3>Contacto</h3>
+        <p><i class="fas fa-phone"></i> +51 919 543 387</p>
+        <p><i class="fas fa-envelope"></i> viajesseguro@utptravel.com</p>
+        <p><i class="fas fa-map-marker-alt"></i> Av. Central 123, Lima, Perú</p>
+      </div>
+    </section>
+    <section class="redes">
+      <div>
+        <h3>Síguenos</h3>
+        <div><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></div>
+        <div><a href="#"><i class="fab fa-instagram"></i> Instagram</a></div>
+        <div><a href="#"><i class="fab fa-x-twitter"></i> Twitter</a></div>
+        <div><a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a></div>
+      </div>
+    </section>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    window.API_BASE_URL = 'http://localhost:8000/backend_php/api';
+  </script>
+  <script src="../js/user-sidebar-loader.js"></script>
+  <script src="../js/user-sidebar.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/navbar.js"></script>
+  <script src="../js/comprar.js"></script>
+  </body>
+</html>
