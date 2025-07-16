@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # UTP Travel - Sistema de Gestión de Transporte Interprovincial
 
 ## 📋 Descripción
@@ -249,7 +250,6 @@ chown -R www-data:www-data /var/www/utp_travel
 
 # Permisos específicos para directorios de escritura
 chmod -R 777 backend_php/uploads/
-chmod -R 777 backend_php/logs/
 ```
 
 #### Paso 6: Actualizar Base de Datos
@@ -258,52 +258,20 @@ chmod -R 777 backend_php/logs/
 curl -X GET "http://localhost/utp_travel/backend_php/api/upgrade-database.php"
 ```
 
-### 🔧 Configuración Avanzada
-
-#### Configuración de HTTPS
-```bash
-# Generar certificado SSL (Let's Encrypt)
 sudo certbot --nginx -d tu-dominio.com
 ```
-
-#### Configuración de Respaldo Automático
-```bash
-# Crear script de respaldo
-cat > backup_daily.sh << 'EOF'
 #!/bin/bash
 DATE=$(date +%Y%m%d_%H%M%S)
-mysqldump -u root -p utp_buzz > /backups/utp_travel_$DATE.sql
-tar -czf /backups/utp_travel_files_$DATE.tar.gz /var/www/utp_travel
-EOF
-
 # Programar con cron
 echo "0 2 * * * /path/to/backup_daily.sh" | crontab -
-```
-
-## 🗄️ Arquitectura de Base de Datos
-
 ### 📊 Diagrama de Entidad-Relación
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  usuarios_login │    │    usuarios     │    │     rutas       │
-├─────────────────┤    ├─────────────────┤    ├─────────────────┤
-│ id (PK)         │─┐  │ id (PK)         │    │ id (PK)         │
-│ username        │ │  │ user_login_id   │──┐ │ origen          │
-│ email           │ │  │ nombres         │  │ │ destino         │
-│ contraseña      │ │  │ apellidos       │  │ │ fecha_salida    │
 │ role            │ │  │ dni             │  │ │ precio          │
 │ is_active       │ │  │ telefono        │  │ │ capacidad       │
-│ created_at      │ │  │ direccion       │  │ │ estado          │
-│ updated_at      │ │  │ ...             │  │ │ ...             │
-└─────────────────┘ │  └─────────────────┘  │ └─────────────────┘
-                    │                       │           │
-                    │  ┌─────────────────┐  │           │
                     │  │    reservas     │  │           │
                     │  ├─────────────────┤  │           │
-                    │  │ id (PK)         │  │           │
-                    │  │ codigo_reserva  │  │           │
-                    │  │ ruta_id (FK)    │──┘           │
                     │  │ usuario_id (FK) │──────────────┘
                     │  │ nombres_pasajero│
                     │  │ precio_total    │
@@ -329,12 +297,7 @@ echo "0 2 * * * /path/to/backup_daily.sh" | crontab -
                     │  ├─────────────────┤
                     │  │ id (PK)         │
                     │  │ usuario_id (FK) │──┘
-                    │  │ tipo_evento     │
-                    │  │ evento          │
-                    │  │ descripcion     │
-                    │  │ nivel_severidad │
-                    │  │ created_at      │
-                    │  │ ...             │
+...existing code...
                     │  └─────────────────┘
 ```
 
@@ -1594,3 +1557,7 @@ SOFTWARE.
 ---
 
 © 2025 UTP Travel - Universidad Tecnológica del Perú. Todos los derechos reservados.
+=======
+# pag_web
+Pagina web como proyecto de la universidad
+>>>>>>> 481ee84882089170ea1491328b5df8e0f1a95fcb
