@@ -229,42 +229,39 @@ class AdminEstadisticas {
               <div class="card-header">
                 <h6><i class="fas fa-chart-pie"></i> Rutas por Estado</h6>
               </div>
-              <div class="card-body">
+              <div class="card-body d-flex flex-column justify-content-center align-items-center" style="height: 180px;">
                 ${this.renderEstadoChart()}
               </div>
             </div>
           </div>
-          
           <div class="col-md-6">
             <div class="card">
               <div class="card-header">
                 <h6><i class="fas fa-star"></i> Top 5 Rutas Populares</h6>
               </div>
-              <div class="card-body">
+              <div class="card-body d-flex flex-column justify-content-center align-items-center" style="height: 180px;">
                 ${this.renderRutasPopulares()}
               </div>
             </div>
           </div>
         </div>
-        
         <div class="row mt-4">
-          <div class="col-md-8">
+          <div class="col-md-6">
             <div class="card">
               <div class="card-header">
                 <h6><i class="fas fa-chart-line"></i> Tendencia de Ingresos</h6>
               </div>
-              <div class="card-body">
+              <div class="card-body d-flex flex-column justify-content-center align-items-center" style="height: 180px;">
                 ${this.renderIngresosTrend()}
               </div>
             </div>
           </div>
-          
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="card">
               <div class="card-header">
                 <h6><i class="fas fa-trophy"></i> Rutas Más Rentables</h6>
               </div>
-              <div class="card-body">
+              <div class="card-body d-flex flex-column justify-content-center align-items-center" style="height: 180px;">
                 ${this.renderRutasRentables()}
               </div>
             </div>
@@ -280,44 +277,19 @@ class AdminEstadisticas {
     if (!this.estadisticas.rutas || !this.estadisticas.rutas.porEstado) {
       return '<p class="text-muted">No hay datos disponibles</p>';
     }
-    
     const estados = this.estadisticas.rutas.porEstado;
     const total = Object.values(estados).reduce((sum, val) => sum + val, 0);
-    
     if (total === 0) {
       return '<p class="text-muted">No hay rutas registradas</p>';
     }
-    
+    // Nuevo diseño visual tipo badges grandes y centrados
     return `
-      <div class="estado-stats">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <span>Activas</span>
-          <div class="d-flex align-items-center">
-            <div class="progress me-2" style="width: 100px; height: 10px;">
-              <div class="progress-bar bg-success" style="width: ${(estados.activo / total * 100)}%"></div>
-            </div>
-            <span class="badge bg-success">${estados.activo}</span>
-          </div>
-        </div>
-        
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <span>Inactivas</span>
-          <div class="d-flex align-items-center">
-            <div class="progress me-2" style="width: 100px; height: 10px;">
-              <div class="progress-bar bg-secondary" style="width: ${(estados.inactivo / total * 100)}%"></div>
-            </div>
-            <span class="badge bg-secondary">${estados.inactivo}</span>
-          </div>
-        </div>
-        
-        <div class="d-flex justify-content-between align-items-center">
-          <span>Mantenimiento</span>
-          <div class="d-flex align-items-center">
-            <div class="progress me-2" style="width: 100px; height: 10px;">
-              <div class="progress-bar bg-warning" style="width: ${(estados.mantenimiento / total * 100)}%"></div>
-            </div>
-            <span class="badge bg-warning">${estados.mantenimiento}</span>
-          </div>
+      <div class="w-100 text-center d-flex flex-column justify-content-center align-items-center" style="height: 140px;">
+        <h5 style="font-size: 2rem;">Rutas por Estado</h5>
+        <div id="info-rutas-estado" style="font-size: 1.5rem; margin-top: 10px;">
+          <span class="badge bg-success mx-2">Activas: <span id="rutas-activas">${estados.activo}</span></span>
+          <span class="badge bg-info mx-2">Concluidas: <span id="rutas-concluidas">${estados.inactivo}</span></span>
+          <span class="badge bg-warning mx-2">Vencidas: <span id="rutas-vencidas">${estados.mantenimiento}</span></span>
         </div>
       </div>
     `;
@@ -352,15 +324,12 @@ class AdminEstadisticas {
       return '<p class="text-muted">No hay datos de ingresos disponibles</p>';
     }
     
-    const ingresosPorMes = this.estadisticas.ingresos.porMes;
-    
+    let ingresosPorMes = this.estadisticas.ingresos.porMes;
     if (!Array.isArray(ingresosPorMes) || ingresosPorMes.length === 0) {
-      return '<p class="text-muted">No hay datos mensuales disponibles</p>';
+      return '<div class="w-100 text-center d-flex flex-column justify-content-center align-items-center" style="height: 140px;"><p class="text-muted">No hay datos mensuales disponibles</p></div>';
     }
-    
-    // Crear una representación simple de tendencia
+    ingresosPorMes = ingresosPorMes.slice(0, 6);
     const maxIngreso = Math.max(...ingresosPorMes.map(item => parseFloat(item.ingresos || 0)));
-    
     return `
       <div class="ingresos-trend">
         ${ingresosPorMes.map(item => {
@@ -378,8 +347,6 @@ class AdminEstadisticas {
             </div>
           `;
         }).join('')}
-        
-        ${ingresosPorMes.length === 0 ? '<p class="text-muted text-center">No hay datos mensuales registrados</p>' : ''}
       </div>
     `;
   }
@@ -389,12 +356,10 @@ class AdminEstadisticas {
       return '<p class="text-muted">No hay datos disponibles</p>';
     }
     
-    const rutas = this.estadisticas.ingresos.rutasRentables.slice(0, 5);
-    
+    const rutas = this.estadisticas.ingresos.rutasRentables.slice(0, 6);
     if (rutas.length === 0) {
-      return '<p class="text-muted">No hay rutas rentables registradas</p>';
+      return '<div class="w-100 text-center d-flex flex-column justify-content-center align-items-center" style="height: 140px;"><p class="text-muted">No hay rutas rentables registradas</p></div>';
     }
-    
     return rutas.map((ruta, index) => `
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div>

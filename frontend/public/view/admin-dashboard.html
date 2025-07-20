@@ -773,27 +773,10 @@
 
         <!-- Stats Overview -->
         <div class="row mb-4">
-          <div class="col-md-4">
-            <div class="admin-card stat-card stat-info">
+          <div class="col-md-12">
+            <div class="admin-card stat-card stat-secondary">
               <div class="card-body text-center">
-                <h3 id="stat-total-concluidas">0</h3>
-                <p>Rutas Concluidas</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="admin-card stat-card stat-success">
-              <div class="card-body text-center">
-                <h3 id="stat-total-pasajeros">0</h3>
-                <p>Pasajeros Transportados</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="admin-card stat-card stat-warning">
-              <div class="card-body text-center">
-                <h3 id="stat-total-ingresos">S/ 0.00</h3>
-                <p>Ingresos Generados</p>
+                <h5>Rutas por Estado</h5>
               </div>
             </div>
           </div>
@@ -826,22 +809,21 @@
         <div class="modal-body">
           <form id="formEditarUsuario">
             <input type="hidden" id="edit-user-id">
-            <div class="mb-3">
-              <label class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="edit-user-name" required>
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <div class="admin-card stat-card stat-secondary d-flex align-items-center justify-content-center" style="height: 180px;">
+                <div class="card-body w-100 text-center d-flex flex-column justify-content-center align-items-center">
+                  <h5 style="font-size: 2rem;">Rutas por Estado</h5>
+                  <div id="info-rutas-estado" style="font-size: 1.5rem; margin-top: 10px;"> <!-- Aquí se puede mostrar la información dinámica -->
+                    <!-- Ejemplo: -->
+                    <span class="badge bg-success mx-2">Activas: <span id="rutas-activas">0</span></span>
+                    <span class="badge bg-info mx-2">Concluidas: <span id="rutas-concluidas">0</span></span>
+                    <span class="badge bg-warning mx-2">Vencidas: <span id="rutas-vencidas">0</span></span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input type="email" class="form-control" id="edit-user-email" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Rol</label>
-              <select class="form-control" id="edit-user-rol" required>
-                <option value="admin">Administrador</option>
-                <option value="trabajador">Trabajador</option>
-                <option value="usuario">Usuario</option>
-              </select>
-            </div>
+          </div>
           </form>
         </div>
         <div class="modal-footer">

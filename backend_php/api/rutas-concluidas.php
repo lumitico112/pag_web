@@ -78,13 +78,63 @@ switch ($method) {
         break;
         
     case 'POST':
-        // Mover ruta específica a concluidas manualmente
+        // Mover ruta específica a concluidas manualmente (simple: copiar y eliminar)
         $data = json_decode(file_get_contents('php://input'), true);
-        if (isset($data['ruta_id'])) {
-            moverRutaAConcluidas($conn, $data['ruta_id'], true);
-        } else {
+        $id = $data['ruta_id'] ?? $data['id'] ?? null;
+        if (!$id) {
             http_response_code(400);
             echo json_encode(['error' => 'ID de ruta requerido']);
+            break;
+        }
+        try {
+            // Obtener la ruta original
+            $stmt = $conn->prepare("SELECT * FROM rutas WHERE id = ?");
+            $stmt->execute([$id]);
+            $ruta = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$ruta) {
+                throw new Exception('Ruta no encontrada');
+            }
+            // Insertar en rutas_concluidas
+            $stmt = $conn->prepare("
+                INSERT INTO rutas_concluidas (
+                    ruta_id_original, origen, destino, origen_region, origen_provincia, origen_ciudad,
+                    destino_region, destino_provincia, destino_ciudad, fecha_salida, hora_salida,
+                    fecha_llegada, hora_llegada, precio, capacidad_pasajeros, asientos_disponibles,
+                    duracion, distancia_km, descripcion, imagen, estado, total_pasajeros_transportados,
+                    ingresos_generados
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $ruta['id'],
+                $ruta['origen'],
+                $ruta['destino'],
+                $ruta['origen_region'],
+                $ruta['origen_provincia'],
+                $ruta['origen_ciudad'],
+                $ruta['destino_region'],
+                $ruta['destino_provincia'],
+                $ruta['destino_ciudad'],
+                $ruta['fecha_salida'],
+                $ruta['hora_salida'],
+                $ruta['fecha_llegada'],
+                $ruta['hora_llegada'],
+                $ruta['precio'],
+                $ruta['capacidad_pasajeros'],
+                $ruta['asientos_disponibles'] ?? 40,
+                $ruta['duracion'],
+                $ruta['distancia_km'],
+                $ruta['descripcion'] ?? '',
+                $ruta['imagen'],
+                'concluido',
+                0,
+                0
+            ]);
+            // Eliminar la ruta original
+            $conn->prepare("DELETE FROM rutas WHERE id = ?")->execute([$id]);
+            echo json_encode(["success" => true, "message" => "Ruta movida correctamente a rutas_concluidas", "id" => $id]);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(["success" => false, "error" => $e->getMessage()]);
         }
         break;
         
@@ -157,11 +207,12 @@ function moverRutaAConcluidas($conn, $rutaId, $manual = true, $datosRuta = null)
         // Insertar en rutas concluidas
         $sqlInsert = "INSERT INTO rutas_concluidas (
             ruta_id_original, origen, destino, precio, duracion, imagen, estado,
-            origen_region, origen_provincia, origen_distrito, origen_ciudad,
-            destino_region, destino_provincia, destino_distrito, destino_ciudad,
+            origen_region, origen_provincia, origen_ciudad,
+            destino_region, destino_provincia, destino_ciudad,
             distancia_km, capacidad_pasajeros, fecha_salida, hora_salida, 
-            fecha_llegada, hora_llegada, total_pasajeros_transportados, ingresos_generados
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            fecha_llegada, hora_llegada, total_pasajeros_transportados, ingresos_generados,
+            fecha_conclusion, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $conn->prepare($sqlInsert);
         $stmt->execute([
@@ -174,24 +225,24 @@ function moverRutaAConcluidas($conn, $rutaId, $manual = true, $datosRuta = null)
             'concluida',
             $datosRuta['origen_region'] ?? null,
             $datosRuta['origen_provincia'] ?? null,
-            $datosRuta['origen_distrito'] ?? null,
             $datosRuta['origen_ciudad'] ?? null,
             $datosRuta['destino_region'] ?? null,
             $datosRuta['destino_provincia'] ?? null,
-            $datosRuta['destino_distrito'] ?? null,
             $datosRuta['destino_ciudad'] ?? null,
             $datosRuta['distancia_km'],
             $datosRuta['capacidad_pasajeros'],
             $datosRuta['fecha_salida'],
-            date('H:i:s', strtotime($datosRuta['fecha_salida'])), // Extraer hora de fecha_salida
+            date('H:i:s', strtotime($datosRuta['fecha_salida'])),
             $datosRuta['fecha_llegada'],
             $datosRuta['fecha_llegada'] ? date('H:i:s', strtotime($datosRuta['fecha_llegada'])) : null,
             $datosRuta['total_pasajeros'] ?? 0,
-            $datosRuta['ingresos_total'] ?? 0
+            $datosRuta['ingresos_total'] ?? 0,
+            null, // fecha_conclusion
+            null  // created_at
         ]);
         
-        // Cambiar estado de la ruta original a 'concluida'
-        $stmt = $conn->prepare("UPDATE rutas SET estado = 'concluida' WHERE id = ?");
+        // Eliminar la ruta original de la tabla rutas
+        $stmt = $conn->prepare("DELETE FROM rutas WHERE id = ?");
         $stmt->execute([$rutaId]);
         
         $conn->commit();

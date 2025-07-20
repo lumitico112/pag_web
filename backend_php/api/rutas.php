@@ -121,104 +121,59 @@ switch ($method) {
         break;
         
     case 'POST':
-        // Crear nueva ruta
+        // Mover ruta a concluidas y eliminar de rutas (igual que test-mover)
         $data = json_decode(file_get_contents('php://input'), true);
-        
+        if (!isset($data['id'])) {
+            http_response_code(400);
+            echo json_encode(["success" => false, "error" => "ID de ruta requerido"]);
+            break;
+        }
         try {
-            $conn->beginTransaction();
-            
-            $sql = "INSERT INTO rutas (
-                        origen, destino, precio, duracion, imagen, estado,
-                        origen_region, origen_provincia, origen_ciudad,
-                        destino_region, destino_provincia, destino_ciudad,
-                        fecha_salida, hora_salida, fecha_llegada, hora_llegada,
-                        distancia_km, capacidad_pasajeros
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            
-            $stmt = $conn->prepare($sql);
-            $result = $stmt->execute([
-                $data['origen'] ?? '',
-                $data['destino'] ?? '',
-                $data['precio'] ?? 0,
-                $data['duracion'] ?? '',
-                $data['imagen'] ?? '',
-                $data['estado'] ?? 'activo',
-                $data['origen_region'] ?? '',
-                $data['origen_provincia'] ?? '',
-                $data['origen_ciudad'] ?? '',
-                $data['destino_region'] ?? '',
-                $data['destino_provincia'] ?? '',
-                $data['destino_ciudad'] ?? '',
-                !empty($data['fecha_salida']) ? $data['fecha_salida'] : null,
-                $data['hora_salida'] ?? null,
-                !empty($data['fecha_llegada']) ? $data['fecha_llegada'] : null,
-                $data['hora_llegada'] ?? null,
-                $data['distancia_km'] ?? 0
-            ]);
-            
-            if ($result) {
-                $rutaId = $conn->lastInsertId();
-                
-                // Verificar si la ruta ya está vencida (fecha/hora de llegada ya pasó)
-                $fechaLlegada = null;
-                if (!empty($data['fecha_llegada']) && !empty($data['hora_llegada'])) {
-                    $fechaLlegada = $data['fecha_llegada'] . ' ' . $data['hora_llegada'];
-                } elseif (!empty($data['fecha_llegada'])) {
-                    $fechaLlegada = $data['fecha_llegada'] . ' 23:59:59';
-                }
-                
-                $rutaVencida = false;
-                if ($fechaLlegada) {
-                    // Usar DateTime para manejar zonas horarias correctamente
-                    $fechaLlegadaObj = new DateTime($fechaLlegada);
-                    $fechaActualObj = new DateTime();
-                    
-                    if ($fechaLlegadaObj < $fechaActualObj) {
-                        $rutaVencida = true;
-                        
-                        // Mover la ruta a concluidas inmediatamente
-                        $resultadoMover = moverRutaRecienCreadaAConcluidas($conn, $rutaId, $data);
-                        
-                        if (!$resultadoMover) {
-                            throw new Exception('Error al mover ruta vencida a concluidas');
-                        }
-                        
-                        // Commit la transacción aquí si la ruta fue movida exitosamente
-                        $conn->commit();
-                        
-                        echo json_encode([
-                            "success" => true,
-                            "message" => "Ruta creada pero movida automáticamente a concluidas porque ya venció",
-                            "id" => $rutaId,
-                            "estado" => "concluida",
-                            "movida_a_concluidas" => true
-                        ]);
-                        
-                        return; // Salir temprano para evitar el commit duplicado
-                    }
-                }
-                
-                $conn->commit();
-                
-                echo json_encode([
-                    "success" => true,
-                    "message" => "Ruta creada correctamente", 
-                    "id" => $rutaId,
-                    "estado" => "activo"
-                ]);
-            } else {
-                throw new Exception('Error al crear la ruta');
+            $stmt = $conn->prepare("SELECT * FROM rutas WHERE id = ?");
+            $stmt->execute([$data['id']]);
+            $ruta = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$ruta) {
+                throw new Exception("No se encontró la ruta con id " . $data['id']);
             }
+            $stmt = $conn->prepare("
+                INSERT INTO rutas_concluidas (
+                    ruta_id_original, origen, destino, origen_region, origen_provincia, origen_ciudad,
+                    destino_region, destino_provincia, destino_ciudad, fecha_salida, hora_salida,
+                    fecha_llegada, hora_llegada, precio, capacidad_pasajeros, asientos_disponibles,
+                    duracion, distancia_km, descripcion, imagen, estado, total_pasajeros_transportados,
+                    ingresos_generados
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $ruta['id'],
+                $ruta['origen'],
+                $ruta['destino'],
+                $ruta['origen_region'],
+                $ruta['origen_provincia'],
+                $ruta['origen_ciudad'],
+                $ruta['destino_region'],
+                $ruta['destino_provincia'],
+                $ruta['destino_ciudad'],
+                $ruta['fecha_salida'],
+                $ruta['hora_salida'],
+                $ruta['fecha_llegada'],
+                $ruta['hora_llegada'],
+                $ruta['precio'],
+                $ruta['capacidad_pasajeros'],
+                $ruta['asientos_disponibles'],
+                $ruta['duracion'],
+                $ruta['distancia_km'],
+                $ruta['descripcion'],
+                $ruta['imagen'],
+                'concluido',
+                0,
+                0
+            ]);
+            $conn->prepare("DELETE FROM rutas WHERE id = ?")->execute([$data['id']]);
+            echo json_encode(["success" => true, "message" => "Ruta movida correctamente a rutas_concluidas", "id" => $data['id']]);
         } catch (Exception $e) {
-            // Verificar si hay una transacción activa antes de hacer rollback
-            if ($conn->inTransaction()) {
-                $conn->rollBack();
-            }
             http_response_code(500);
-            echo json_encode([
-                "success" => false,
-                "error" => "Error al crear la ruta: " . $e->getMessage()
-            ]);
+            echo json_encode(["success" => false, "error" => $e->getMessage()]);
         }
         break;
         
@@ -284,7 +239,7 @@ switch ($method) {
         // Eliminar ruta
         if (!isset($_GET['id'])) {
             http_response_code(400);
-            echo json_encode(["error" => "ID de ruta requerido"]);
+            echo json_encode(["success" => false, "error" => "ID de ruta requerido"]);
             break;
         }
         
@@ -295,7 +250,7 @@ switch ($method) {
         
         if ($reservas > 0) {
             http_response_code(400);
-            echo json_encode(["error" => "No se puede eliminar una ruta con reservas activas"]);
+            echo json_encode(["success" => false, "error" => "No se puede eliminar una ruta con reservas activas"]);
             break;
         }
         
@@ -303,10 +258,10 @@ switch ($method) {
         $result = $stmt->execute([$_GET['id']]);
         
         if ($result) {
-            echo json_encode(["message" => "Ruta eliminada correctamente"]);
+            echo json_encode(["success" => true, "message" => "Ruta eliminada correctamente"]);
         } else {
             http_response_code(500);
-            echo json_encode(["error" => "Error al eliminar la ruta"]);
+            echo json_encode(["success" => false, "error" => "Error al eliminar la ruta"]);
         }
         break;
         
@@ -332,11 +287,11 @@ function moverRutaRecienCreadaAConcluidas($conn, $rutaId, $datosRuta) {
             estado VARCHAR(50) DEFAULT 'concluida',
             origen_region VARCHAR(100),
             origen_provincia VARCHAR(100),
-            origen_distrito VARCHAR(100),
+            /* origen_distrito eliminado */
             origen_ciudad VARCHAR(100),
             destino_region VARCHAR(100),
             destino_provincia VARCHAR(100),
-            destino_distrito VARCHAR(100),
+            /* destino_distrito eliminado */
             destino_ciudad VARCHAR(100),
             distancia_km DECIMAL(10,2),
             capacidad_pasajeros INT DEFAULT 40,
@@ -369,11 +324,11 @@ function moverRutaRecienCreadaAConcluidas($conn, $rutaId, $datosRuta) {
         // Datos de ubicación
         $origen_region = $datosRuta['origen_region'] ?? null;
         $origen_provincia = $datosRuta['origen_provincia'] ?? null;
-        $origen_distrito = $datosRuta['origen_distrito'] ?? null;
+        // $origen_distrito eliminado
         $origen_ciudad = $datosRuta['origen_ciudad'] ?? null;
         $destino_region = $datosRuta['destino_region'] ?? null;
         $destino_provincia = $datosRuta['destino_provincia'] ?? null;
-        $destino_distrito = $datosRuta['destino_distrito'] ?? null;
+        // $destino_distrito eliminado
         $destino_ciudad = $datosRuta['destino_ciudad'] ?? null;
         
         // Datos numéricos
@@ -406,12 +361,12 @@ function moverRutaRecienCreadaAConcluidas($conn, $rutaId, $datosRuta) {
         
         // Insertar en rutas concluidas
         $sqlInsert = "INSERT INTO rutas_concluidas (
-            ruta_id_original, origen, destino, precio, duracion, imagen, estado,
-            origen_region, origen_provincia, origen_distrito, origen_ciudad,
-            destino_region, destino_provincia, destino_distrito, destino_ciudad,
-            distancia_km, capacidad_pasajeros, fecha_salida, hora_salida, 
-            fecha_llegada, hora_llegada, total_pasajeros_transportados, ingresos_generados
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ruta_id_original, origen, destino, origen_region, origen_provincia, origen_ciudad,
+            destino_region, destino_provincia, destino_ciudad, fecha_salida, hora_salida,
+            fecha_llegada, hora_llegada, precio, capacidad_pasajeros, asientos_disponibles,
+            duracion, distancia_km, descripcion, imagen, estado, total_pasajeros_transportados,
+            ingresos_generados, fecha_conclusion, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $conn->prepare($sqlInsert);
         if (!$stmt) {
@@ -422,26 +377,28 @@ function moverRutaRecienCreadaAConcluidas($conn, $rutaId, $datosRuta) {
             $rutaId,
             $origen,
             $destino,
-            $precio,
-            $duracion,
-            $imagen,
-            $estado,
             $origen_region,
             $origen_provincia,
-            $origen_distrito,
             $origen_ciudad,
             $destino_region,
             $destino_provincia,
-            $destino_distrito,
             $destino_ciudad,
-            $distancia_km,
-            $capacidad_pasajeros,
             $fecha_salida,
             $hora_salida,
             $fecha_llegada,
             $hora_llegada,
+            $precio,
+            $capacidad_pasajeros,
+            $datosRuta['asientos_disponibles'] ?? 40,
+            $duracion,
+            $distancia_km,
+            $datosRuta['descripcion'] ?? '',
+            $imagen,
+            $estado,
             0, // total_pasajeros_transportados
-            0  // ingresos_generados
+            0, // ingresos_generados
+            null, // fecha_conclusion
+            null  // created_at
         ];
         
         error_log("DEBUG: Ejecutando inserción con " . count($params) . " parámetros");
@@ -487,25 +444,26 @@ function verificarYMoverRutasVencidas($conn) {
         foreach ($rutasVencidas as $ruta) {
             // Convertir los datos de la ruta al formato esperado por la función
             $datosRuta = [
-                'origen' => $ruta['origen'],
-                'destino' => $ruta['destino'],
-                'precio' => $ruta['precio'],
-                'duracion' => $ruta['duracion'],
-                'imagen' => $ruta['imagen'],
-                'origen_region' => $ruta['origen_region'],
-                'origen_provincia' => $ruta['origen_provincia'],
-                'origen_distrito' => $ruta['origen_distrito'],
-                'origen_ciudad' => $ruta['origen_ciudad'],
-                'destino_region' => $ruta['destino_region'],
-                'destino_provincia' => $ruta['destino_provincia'],
-                'destino_distrito' => $ruta['destino_distrito'],
-                'destino_ciudad' => $ruta['destino_ciudad'],
-                'distancia_km' => $ruta['distancia_km'],
-                'capacidad_pasajeros' => $ruta['capacidad_pasajeros'],
-                'fecha_salida' => $ruta['fecha_salida'] ? (new DateTime($ruta['fecha_salida']))->format('Y-m-d') : null,
-                'hora_salida' => $ruta['hora_salida'],
-                'fecha_llegada' => $ruta['fecha_llegada'] ? (new DateTime($ruta['fecha_llegada']))->format('Y-m-d') : null,
-                'hora_llegada' => $ruta['hora_llegada']
+                'id' => $ruta['id'],
+                'origen' => $ruta['origen'] ?? '',
+                'destino' => $ruta['destino'] ?? '',
+                'origen_region' => $ruta['origen_region'] ?? '',
+                'origen_provincia' => $ruta['origen_provincia'] ?? '',
+                'origen_ciudad' => $ruta['origen_ciudad'] ?? '',
+                'destino_region' => $ruta['destino_region'] ?? '',
+                'destino_provincia' => $ruta['destino_provincia'] ?? '',
+                'destino_ciudad' => $ruta['destino_ciudad'] ?? '',
+                'fecha_salida' => !empty($ruta['fecha_salida']) ? $ruta['fecha_salida'] : date('Y-m-d'),
+                'hora_salida' => !empty($ruta['hora_salida']) ? $ruta['hora_salida'] : '00:00:00',
+                'fecha_llegada' => !empty($ruta['fecha_llegada']) ? $ruta['fecha_llegada'] : date('Y-m-d'),
+                'hora_llegada' => !empty($ruta['hora_llegada']) ? $ruta['hora_llegada'] : '00:00:00',
+                'precio' => $ruta['precio'] ?? 0,
+                'duracion' => $ruta['duracion'] ?? '',
+                'imagen' => $ruta['imagen'] ?? '',
+                'distancia_km' => $ruta['distancia_km'] ?? 0,
+                'capacidad_pasajeros' => $ruta['capacidad_pasajeros'] ?? 40,
+                'asientos_disponibles' => $ruta['asientos_disponibles'] ?? 40,
+                'descripcion' => $ruta['descripcion'] ?? '',
             ];
             
             // Mover la ruta a concluidas

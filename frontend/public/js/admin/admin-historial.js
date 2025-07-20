@@ -456,20 +456,20 @@ class AdminHistorial {
 
   async procesarRutaVencida(rutaId) {
     try {
-      const response = await fetch(`${API_BASE_URL}/rutas.php?mover_concluida=${rutaId}`, {
-        method: 'POST'
+      const response = await fetch(`${API_BASE_URL}/rutas-concluidas.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: rutaId })
       });
-      
       if (!response.ok) {
         throw new Error(`Error HTTP: ${response.status}`);
       }
-      
       const data = await response.json();
       if (data.success) {
         console.log(`Ruta ${rutaId} procesada exitosamente`);
         return true;
       } else {
-        throw new Error(data.message || 'Error al procesar ruta');
+        throw new Error(data.error || data.message || 'Error al procesar ruta');
       }
     } catch (error) {
       console.error(`Error procesando ruta ${rutaId}:`, error);
