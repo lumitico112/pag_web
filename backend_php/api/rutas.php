@@ -129,11 +129,11 @@ switch ($method) {
             
             $sql = "INSERT INTO rutas (
                         origen, destino, precio, duracion, imagen, estado,
-                        origen_region, origen_provincia, origen_distrito, origen_ciudad,
-                        destino_region, destino_provincia, destino_distrito, destino_ciudad,
-                        distancia_km, capacidad_pasajeros, fecha_salida, hora_salida, 
-                        fecha_llegada, hora_llegada
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        origen_region, origen_provincia, origen_ciudad,
+                        destino_region, destino_provincia, destino_ciudad,
+                        fecha_salida, hora_salida, fecha_llegada, hora_llegada,
+                        distancia_km, capacidad_pasajeros
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             
             $stmt = $conn->prepare($sql);
             $result = $stmt->execute([
@@ -145,18 +145,15 @@ switch ($method) {
                 $data['estado'] ?? 'activo',
                 $data['origen_region'] ?? '',
                 $data['origen_provincia'] ?? '',
-                $data['origen_distrito'] ?? '',
                 $data['origen_ciudad'] ?? '',
                 $data['destino_region'] ?? '',
                 $data['destino_provincia'] ?? '',
-                $data['destino_distrito'] ?? '',
                 $data['destino_ciudad'] ?? '',
-                $data['distancia_km'] ?? 0,
-                $data['capacidad_pasajeros'] ?? 40,
-                !empty($data['fecha_salida']) ? $data['fecha_salida'] . ' ' . ($data['hora_salida'] ?? '00:00:00') : null,
+                !empty($data['fecha_salida']) ? $data['fecha_salida'] : null,
                 $data['hora_salida'] ?? null,
-                !empty($data['fecha_llegada']) ? $data['fecha_llegada'] . ' ' . ($data['hora_llegada'] ?? '00:00:00') : null,
-                $data['hora_llegada'] ?? null
+                !empty($data['fecha_llegada']) ? $data['fecha_llegada'] : null,
+                $data['hora_llegada'] ?? null,
+                $data['distancia_km'] ?? 0
             ]);
             
             if ($result) {
@@ -240,8 +237,8 @@ switch ($method) {
         
         $sql = "UPDATE rutas SET 
                     origen = ?, destino = ?, precio = ?, duracion = ?, imagen = ?, estado = ?,
-                    origen_region = ?, origen_provincia = ?, origen_distrito = ?, origen_ciudad = ?,
-                    destino_region = ?, destino_provincia = ?, destino_distrito = ?, destino_ciudad = ?,
+                    origen_region = ?, origen_provincia = ?, origen_ciudad = ?,
+                    destino_region = ?, destino_provincia = ?, destino_ciudad = ?,
                     distancia_km = ?, capacidad_pasajeros = ?, fecha_salida = ?, hora_salida = ?, 
                     fecha_llegada = ?, hora_llegada = ?
                 WHERE id = ?";
@@ -256,11 +253,9 @@ switch ($method) {
             $data['estado'] ?? 'activo',
             $data['origen_region'] ?? '',
             $data['origen_provincia'] ?? '',
-            $data['origen_distrito'] ?? '',
             $data['origen_ciudad'] ?? '',
             $data['destino_region'] ?? '',
             $data['destino_provincia'] ?? '',
-            $data['destino_distrito'] ?? '',
             $data['destino_ciudad'] ?? '',
             $data['distancia_km'] ?? 0,
             $data['capacidad_pasajeros'] ?? 40,
